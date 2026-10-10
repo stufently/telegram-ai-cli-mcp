@@ -69,6 +69,37 @@ async def test_the_reaction_reader_is_published_as_a_read_tool() -> None:
     assert tools["telegram_message_reactions"].annotations.read_only_hint is True
 
 
+@pytest.mark.asyncio
+async def test_every_tool_says_when_to_call_it() -> None:
+    """The description is what selects the tool. A short one with no situation
+    is how an agent calls the neighbour, or asks before it should."""
+    from telegram_ai_cli_mcp.ops._use_when import USE_WHEN
+    from telegram_ai_cli_mcp.opspec import REGISTRY
+
+    published = [op for op in REGISTRY.all() if op.mcp_tool or op.plan_tool]
+    missing = sorted(op.name for op in published if op.name not in USE_WHEN)
+    assert not missing, f"published operations with no Use when sentence: {missing}"
+
+    tools = await _list_tools(build_server())
+    expected: set[str] = set()
+    for op in published:
+        if op.mcp_tool:
+            expected.add(op.mcp_tool)
+        if op.plan_tool:
+            expected.add(op.plan_tool)
+    assert {tool.name for tool in tools} == expected
+    for tool in tools:
+        text = tool.description or ""
+        assert "Use when" in text, tool.name
+        assert len(text.split()) >= 25, f"{tool.name}: {len(text.split())} words"
+        hints = tool.annotations
+        assert hints is not None, tool.name
+        assert isinstance(hints.read_only_hint, bool), tool.name
+        assert isinstance(hints.destructive_hint, bool), tool.name
+        if hints.read_only_hint:
+            assert hints.destructive_hint is False, tool.name
+
+
 def test_the_instructions_teach_the_untrusted_markers() -> None:
     """A marker a client is never told about is a marker it cannot honour."""
     from telegram_ai_cli_mcp.mcp_server import INSTRUCTIONS

@@ -217,6 +217,23 @@ jobs:
           path: checksums/
           if-no-files-found: error
 
+  # The Desktop Extension is not a Python distribution. It is built here, in
+  # its own job, and handed to the draft release from a directory that is not
+  # `dist/` — that directory is what PyPI receives, unchanged.
+  build-mcpb:
+    name: Build Desktop Extension
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build the mcpb bundle
+        run: bash scripts/build-mcpb.sh
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mcpb
+          path: dist-mcpb/*.mcpb
+          if-no-files-found: error
+
   publish-pypi:
     name: Publish to PyPI (trusted publishing)
     needs: build
@@ -252,7 +269,11 @@ jobs:
     name: Draft GitHub Release
     # After the upload, not beside it: a draft release for a version that
     # never reached PyPI is a release note for something nobody can install.
-    needs: publish-pypi
+    # The .mcpb is a separate artifact. It must not land in dist/, which is
+    # what the PyPI job publishes.
+    needs:
+      - publish-pypi
+      - build-mcpb
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -267,6 +288,11 @@ jobs:
         with:
           name: checksums
           path: dist/
+      - name: Download the mcpb bundle
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: mcpb
+          path: mcpb-asset/
       - name: Create draft release with checksums
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
@@ -277,3 +303,4 @@ jobs:
           generate_release_notes: true
           files: |
             dist/*
+            mcpb-asset/*

@@ -110,7 +110,21 @@ Importing a `tdata` folder from Telegram Desktop is one way to authorize an acco
 
 ## Install
 
-Not on PyPI yet. The release pipeline is in place ([Releasing](#releasing)) and publishes from a `v*` tag over Trusted Publishing, but it cannot run until the one-time registration on PyPI's side is done — and claiming a name on a public registry is permanent, so that step is the owner's to take deliberately. Install from source, or build the Docker image.
+```bash
+uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp
+```
+
+That one command is the server. It speaks MCP on stdin and waits; every client block below runs the same `uvx` command. Sign the account in first, from a terminal, because neither the server nor the Desktop extension can prompt for a login code:
+
+```bash
+uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai account login --label work --phone "<your phone, E.164>"
+```
+
+`--label` names the account; put your own number in E.164 form; `--phone` is needed only on the first sign-in of that label. `account login-qr --label work` signs in by QR code instead, with no phone number.
+
+The session is stored under `~/.local/state/telegram-ai-cli-mcp/`. The server sends nothing by itself: a plan tool records an intention, and a person applies it with `tg-ai plan apply`.
+
+Not on PyPI yet. The release pipeline is in place ([Releasing](#releasing)) and publishes from a `v*` tag over Trusted Publishing, but it cannot run until the one-time registration on PyPI's side is done — and claiming a name on a public registry is permanent, so that step is the owner's to take deliberately. Until that registration exists, `uvx telegram-ai-cli-mcp` (a PyPI package name, with no `--from`) does nothing useful. The `uvx --from git+…` command above is the install path. A checkout still works, for development:
 
 ```bash
 git clone https://github.com/stufently/telegram-ai-cli-mcp.git
@@ -201,20 +215,47 @@ mcp:
 
 Every key, its default and the rule order the safety kernel applies them in are in the [configuration reference](docs/configuration.md); every command and tool, with its arguments, is in the [operations reference](docs/operations.md).
 
+## Example prompts
+
+Ask in plain language. The server picks the tool.
+
+- What did I miss in Telegram since yesterday morning?
+- Who mentioned me in the project chat, and what did they actually say?
+- Who is this username, and which groups do we have in common?
+- Draft a reply to Alex's last message, but do not send it.
+- Which devices is this account signed in on right now?
+
 ## Add the MCP server to your AI client
 
-The MCP client never handles a Telegram credential directly — the server resolves the account's session from local state, not from anything passed over MCP.
+The MCP client never handles a Telegram credential directly — the server resolves the account's session from local state, not from anything passed over MCP. Every JSON block below runs the same `uvx` command as [Install](#install). `TGAI_PROFILE` is `readonly` (the default; reads only) or `plan` (reads, plus preparing plans a person applies). There is no profile that sends.
 
 ### Claude Code
 
-```bash
-claude mcp add telegram -- tg-ai mcp
+Project file: `.mcp.json` in the project root.
+
+```json
+{
+  "mcpServers": {
+    "telegram": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "tg-ai",
+        "mcp"
+      ],
+      "env": {
+        "TGAI_PROFILE": "readonly"
+      }
+    }
+  }
+}
 ```
 
-Add the `plan` profile if you want it to be able to prepare plans (nothing is ever sent without `tg-ai plan apply` — see [Safety](#safety) for what that promises when the client is Claude Code itself):
+Or from the terminal. Add `--env TGAI_PROFILE=plan` when the agent should be able to prepare plans (nothing is ever sent without `tg-ai plan apply` — see [Safety](#safety) for what that promises when the client is Claude Code itself):
 
 ```bash
-claude mcp add telegram --env TGAI_PROFILE=plan -- tg-ai mcp
+claude mcp add telegram -- uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp
 ```
 
 #### Or as a plugin
@@ -234,18 +275,109 @@ the program. `tg-ai` still has to be on `PATH` — until the first PyPI release
 that means `pipx install git+https://github.com/stufently/telegram-ai-cli-mcp`, or
 this repo checked out and installed — and the account still has to be signed in
 with `tg-ai account login`, because a plugin cannot prompt for a login code.
+The `uvx` blocks above do not put `tg-ai` on `PATH`; the plugin still needs one
+of those installs.
 
 ### Claude Desktop
 
-`claude_desktop_config.json`:
+File: `claude_desktop_config.json` — macOS
+`~/Library/Application Support/Claude/claude_desktop_config.json`, Windows
+`%APPDATA%\Claude\claude_desktop_config.json`, Linux
+`~/.config/Claude/claude_desktop_config.json`.
 
 ```json
 {
   "mcpServers": {
     "telegram": {
-      "command": "tg-ai",
-      "args": ["mcp"],
-      "env": { "TGAI_PROFILE": "plan" }
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "tg-ai",
+        "mcp"
+      ],
+      "env": {
+        "TGAI_PROFILE": "readonly"
+      }
+    }
+  }
+}
+```
+
+One click, without editing JSON: download the `.mcpb` from
+https://github.com/stufently/telegram-ai-cli-mcp/releases/latest
+and open it. Claude Desktop installs the extension and asks for the profile
+(`readonly` or `plan`). Sign in first with `tg-ai account login` in a terminal;
+the extension cannot prompt for a login code, and the server sends nothing
+by itself.
+
+### Cursor
+
+File: `~/.cursor/mcp.json` (every project) or `.cursor/mcp.json` (this project).
+
+```json
+{
+  "mcpServers": {
+    "telegram": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "tg-ai",
+        "mcp"
+      ],
+      "env": {
+        "TGAI_PROFILE": "readonly"
+      }
+    }
+  }
+}
+```
+
+### Windsurf
+
+File: `mcp_config.json` — macOS and Linux `~/.config/devin/mcp_config.json`
+(or `$XDG_CONFIG_HOME/devin/mcp_config.json`), Windows
+`%APPDATA%\devin\mcp_config.json`. Older builds read
+`~/.codeium/windsurf/mcp_config.json`.
+
+```json
+{
+  "mcpServers": {
+    "telegram": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "tg-ai",
+        "mcp"
+      ],
+      "env": {
+        "TGAI_PROFILE": "readonly"
+      }
+    }
+  }
+}
+```
+
+### Zed
+
+File: `settings.json` — Linux and macOS `~/.config/zed/settings.json`.
+
+```json
+{
+  "context_servers": {
+    "telegram": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "tg-ai",
+        "mcp"
+      ],
+      "env": {
+        "TGAI_PROFILE": "readonly"
+      }
     }
   }
 }
@@ -261,9 +393,9 @@ args = ["mcp"]
 env = { TGAI_PROFILE = "plan" }
 ```
 
-### Cursor, Windsurf, VS Code and other stdio MCP clients
+### VS Code and other stdio MCP clients
 
-Same shape as the Claude Desktop block above, in whichever file the client reads its MCP servers from (`.cursor/mcp.json` for Cursor).
+Same shape as the Claude Desktop block above, in whichever file the client reads its MCP servers from.
 
 ### Docker
 
