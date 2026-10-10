@@ -176,7 +176,8 @@ USE_WHEN: dict[str, str] = {
         "for a temporary limit that is not an admin title."
     ),
     "chat.ban": (
-        "Use when the user asks to ban one member so they cannot return. Do not use this "
+        "Use when the user asks to ban one member so they cannot return; in a basic group, "
+        "which keeps no ban list, the plan can only remove them. Do not use this "
         "for a removal that still lets them rejoin; call telegram_plan_kick_user, or "
         "telegram_plan_unban_user to undo a ban."
     ),
@@ -200,8 +201,9 @@ USE_WHEN: dict[str, str] = {
         "telegram_plan_promote_admin to grant rights."
     ),
     "account.profile": (
-        "Use when the user asks to change this account's own name, bio, or username. Do "
-        "not use this to rename a chat; call telegram_plan_set_chat_title."
+        "Use when the user asks to change this account's own first name, last name, or "
+        "bio; the username cannot be changed here. Do not use this to rename a chat; "
+        "call telegram_plan_set_chat_title."
     ),
     "account.block": (
         "Use when the user asks to block one person from contacting this account. Do not "

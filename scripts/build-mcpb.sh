@@ -90,6 +90,13 @@ cat >"$WORK/mcpbignore" <<'EOF'
 **/*.tsx
 **/*.mts
 **/*.cts
+**/*.session
+**/*.session-journal
+**/*.key
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+**/*.egg-info/**
 tools-list.json
 uv.lock
 EOF
@@ -97,7 +104,9 @@ EOF
 STAGE="$WORK/stage"
 mkdir -p "$STAGE"
 cp pyproject.toml README.md LICENSE "$STAGE/"
-cp -a telegram_ai_cli_mcp "$STAGE/telegram_ai_cli_mcp"
+# Tracked files only: a session, key or archive left inside the package
+# directory of a working tree must never ship in a distributed bundle.
+git ls-files -z -- telegram_ai_cli_mcp | xargs -0 cp --parents -t "$STAGE"
 cp mcpb/launch.py "$STAGE/launch.py"
 cp "$WORK/mcpbignore" "$STAGE/.mcpbignore"
 find "$STAGE" -type d -name __pycache__ -print0 | xargs -0r rm -rf
@@ -120,6 +129,7 @@ docker run --rm -u "$uid:$gid" -e HOME=/tmp \
 python3 "$WORK/finish_manifest.py" "$STAGE" pyproject.toml mcpb/manifest.json
 rm -f "$STAGE/tools-list.json" "$STAGE/uv.lock"
 rm -rf "$STAGE/.venv"
+find "$STAGE" -maxdepth 1 -type d -name '*.egg-info' -print0 | xargs -0r rm -rf
 find "$STAGE" -type d -name __pycache__ -print0 | xargs -0r rm -rf
 
 docker run --rm -u "$uid:$gid" -e HOME=/tmp -e npm_config_cache=/npm \
