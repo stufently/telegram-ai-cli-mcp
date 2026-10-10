@@ -117,10 +117,10 @@ uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp
 That one command is the server. It speaks MCP on stdin and waits; every client block below runs the same `uvx` command. Sign the account in first, from a terminal, because neither the server nor the Desktop extension can prompt for a login code:
 
 ```bash
-uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai account login --label work --phone +15551234567
+uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai account login --label work --phone "<your phone, E.164>"
 ```
 
-`--label` names the account; replace the phone number with your own (E.164). It is needed only on the first sign-in of that label. `account login-qr --label work` signs in by QR code instead, with no phone number.
+`--label` names the account; put your own number in E.164 form; `--phone` is needed only on the first sign-in of that label. `account login-qr --label work` signs in by QR code instead, with no phone number.
 
 The session is stored under `~/.local/state/telegram-ai-cli-mcp/`. The server sends nothing by itself: a plan tool records an intention, and a person applies it with `tg-ai plan apply`.
 
