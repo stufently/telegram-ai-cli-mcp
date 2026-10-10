@@ -1,0 +1,3025 @@
+[
+ {
+  "name": "telegram_folders",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "include_private": {
+     "default": false,
+     "description": "Also name the one-to-one conversations a folder contains (requires safety.read.enumerate_dms).",
+     "title": "Include Private",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "title": "FoldersInput"
+  }
+ },
+ {
+  "name": "telegram_chats",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "limit": {
+     "default": 50,
+     "description": "Rows to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "search": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Case-insensitive substring of the chat title or @username.",
+     "title": "Search"
+    },
+    "include_private": {
+     "default": false,
+     "description": "Include one-to-one conversations (requires safety.read.enumerate_dms).",
+     "title": "Include Private",
+     "type": "boolean"
+    },
+    "archived": {
+     "default": false,
+     "description": "List the archive instead of the main list.",
+     "title": "Archived",
+     "type": "boolean"
+    },
+    "folder": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only chats in this Telegram folder — its id, or the name shown in the app. Filters the listing; it never widens it.",
+     "title": "Folder"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ChatsInput"
+  }
+ },
+ {
+  "name": "telegram_chat_read",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link. A link to a specific message (t.me/name/123, t.me/c/123/456) starts the page at that message instead of at the newest one, and a topic link filters the page to that topic.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "limit": {
+     "default": 30,
+     "description": "Messages to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "before_id": {
+     "anyOf": [
+      {
+       "minimum": 1,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Return messages older than this id — the way to page backwards.",
+     "title": "Before Id"
+    },
+    "search": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only messages containing this text.",
+     "title": "Search"
+    },
+    "topic_id": {
+     "anyOf": [
+      {
+       "minimum": 1,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only messages in this forum topic. A topic link (t.me/c/123/12/456 or ?thread=12) supplies it too. Refused on a chat that is not a forum, and cannot be combined with search. List topics with `chat topics`.",
+     "title": "Topic Id"
+    },
+    "include_read_state": {
+     "default": true,
+     "description": "Report which messages have been read, using the chat's read pointers. Costs one extra call and marks nothing as read; turn it off to skip it.",
+     "title": "Include Read State",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ChatReadInput"
+  }
+ },
+ {
+  "name": "telegram_chat_members",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "limit": {
+     "default": 100,
+     "description": "Members to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "search": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Filter members by name or @username.",
+     "title": "Search"
+    },
+    "admins_only": {
+     "default": false,
+     "description": "Return only administrators.",
+     "title": "Admins Only",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ChatMembersInput"
+  }
+ },
+ {
+  "name": "telegram_archive_sync",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link. Only this chat is archived — there is no bulk or background sync, by design.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "limit": {
+     "default": 1000,
+     "description": "Ceiling on messages fetched in this call. New messages are taken first, then older ones are backfilled. Repeat the call to continue; `complete` says whether the beginning of the history has been reached.",
+     "maximum": 5000,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ArchiveSyncInput"
+  }
+ },
+ {
+  "name": "telegram_archive_search",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "query": {
+     "description": "Substring, or a regular expression.",
+     "minLength": 1,
+     "title": "Query",
+     "type": "string"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Restrict to one archived chat. Omit to search every archived chat this policy still permits.",
+     "title": "Chat"
+    },
+    "regex": {
+     "default": false,
+     "description": "Treat `query` as a Python regular expression instead of a substring. This is what a live search cannot do: Telegram matches text, not patterns.",
+     "title": "Regex",
+     "type": "boolean"
+    },
+    "ignore_case": {
+     "default": true,
+     "description": "Match without regard to case.",
+     "title": "Ignore Case",
+     "type": "boolean"
+    },
+    "sender": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only messages from this sender id.",
+     "title": "Sender"
+    },
+    "since": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only messages at or after this ISO-8601 timestamp.",
+     "title": "Since"
+    },
+    "until": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only messages at or before this ISO-8601 timestamp.",
+     "title": "Until"
+    },
+    "limit": {
+     "default": 50,
+     "description": "Matching messages to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ArchiveSearchInput"
+  }
+ },
+ {
+  "name": "telegram_archive_status",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "description": "No arguments beyond the account: it describes what is on this disk.",
+   "title": "ArchiveStatusInput"
+  }
+ },
+ {
+  "name": "telegram_archive_forget",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat_id": {
+     "description": "Marked chat id to erase from the archive, as `archive status` reports it. An id and not a @username or a link: deleting local data must not depend on Telegram resolving anything, or a chat that has since been left could never be erased.",
+     "title": "Chat Id",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "chat_id"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ArchiveForgetInput"
+  }
+ },
+ {
+  "name": "telegram_whois",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "target": {
+     "description": "@username, numeric id, t.me link, or an invite link.",
+     "minLength": 1,
+     "title": "Target",
+     "type": "string"
+    },
+    "common_chats": {
+     "default": true,
+     "description": "For users, also list groups this account shares with them.",
+     "title": "Common Chats",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "target"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "WhoisInput"
+  }
+ },
+ {
+  "name": "telegram_fleet",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "include_excluded": {
+     "default": false,
+     "description": "Also list accounts that safety.accounts excludes from use.",
+     "title": "Include Excluded",
+     "type": "boolean"
+    },
+    "probe": {
+     "default": false,
+     "description": "Connect to each account to confirm its session is still valid.",
+     "title": "Probe",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "description": "Input for the fleet listing.\n\n``account`` is inherited and narrows the listing to one label rather than\nselecting which account performs the work — the only read where it means\nthat, because the fleet *is* the subject.",
+   "title": "FleetInput"
+  }
+ },
+ {
+  "name": "telegram_inbox",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "limit": {
+     "default": 25,
+     "description": "Conversations to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "include_private": {
+     "default": false,
+     "description": "Include one-to-one conversations (requires safety.read.enumerate_dms).",
+     "title": "Include Private",
+     "type": "boolean"
+    },
+    "mentions_only": {
+     "default": false,
+     "description": "Only conversations where this account was mentioned or replied to.",
+     "title": "Mentions Only",
+     "type": "boolean"
+    },
+    "include_muted": {
+     "default": false,
+     "description": "Include chats the user has muted.",
+     "title": "Include Muted",
+     "type": "boolean"
+    },
+    "folder": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only chats in this Telegram folder — its id, or the name shown in the app. Filters the listing; it never widens it.",
+     "title": "Folder"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "description": "``account`` narrows the sweep to one label; by default it covers all.",
+   "title": "InboxInput"
+  }
+ },
+ {
+  "name": "telegram_media_fetch",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "minimum": 1,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message whose attachment to fetch. Omit only when the chat argument is a t.me link to that message.",
+     "title": "Message Id"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "description": "Note what is *absent*: there is no destination parameter, by design.",
+   "title": "MediaFetchInput"
+  }
+ },
+ {
+  "name": "telegram_mentions",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "limit": {
+     "default": 20,
+     "description": "Conversations to fetch and return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "per_chat": {
+     "default": 10,
+     "description": "Messages to fetch per chat, for each of mentions and reactions.",
+     "maximum": 100,
+     "minimum": 1,
+     "title": "Per Chat",
+     "type": "integer"
+    },
+    "include_mentions": {
+     "default": true,
+     "description": "Include unread mentions and replies.",
+     "title": "Include Mentions",
+     "type": "boolean"
+    },
+    "include_reactions": {
+     "default": true,
+     "description": "Include unread reactions to this account's own messages.",
+     "title": "Include Reactions",
+     "type": "boolean"
+    },
+    "include_private": {
+     "default": false,
+     "description": "Include one-to-one conversations (requires safety.read.enumerate_dms).",
+     "title": "Include Private",
+     "type": "boolean"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Optional chat id, @username or t.me link. When set, read only this chat and do not enumerate dialogs.",
+     "title": "Chat"
+    },
+    "offset_id": {
+     "default": 0,
+     "description": "Return unread entries older than this message id. The response reports separate next offsets for mentions and reactions.",
+     "minimum": 0,
+     "title": "Offset Id",
+     "type": "integer"
+    },
+    "topic_id": {
+     "anyOf": [
+      {
+       "minimum": 1,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Forum topic id to filter. Requires chat; a topic-shaped t.me link can supply it instead.",
+     "title": "Topic Id"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "description": "``account`` narrows the sweep to one label; by default it covers all.",
+   "title": "MentionsInput"
+  }
+ },
+ {
+  "name": "telegram_message_reactions",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "minimum": 1,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message. Omit when the chat argument is a link to it.",
+     "title": "Message Id"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "MessageReactionsInput"
+  }
+ },
+ {
+  "name": "telegram_drafts",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "limit": {
+     "default": 50,
+     "description": "Drafts to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "include_private": {
+     "default": false,
+     "description": "Include drafts in one-to-one conversations (requires safety.read.enumerate_dms and the chat's own DM allowlist entry).",
+     "title": "Include Private",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "title": "DraftsInput"
+  }
+ },
+ {
+  "name": "telegram_scheduled",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "limit": {
+     "default": 50,
+     "description": "Messages to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ScheduledInput"
+  }
+ },
+ {
+  "name": "telegram_search",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "query": {
+     "description": "Text to look for.",
+     "minLength": 1,
+     "title": "Query",
+     "type": "string"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Restrict to one chat. Omit to search everything this account can see.",
+     "title": "Chat"
+    },
+    "limit": {
+     "default": 30,
+     "description": "Matching messages to return. `context` adds rows on top of this, so `meta.returned` can exceed it; `meta.matches` is what this caps.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "before_id": {
+     "anyOf": [
+      {
+       "minimum": 1,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only messages older than this id (single-chat searches only).",
+     "title": "Before Id"
+    },
+    "context": {
+     "default": 0,
+     "description": "Messages to include either side of each match, marked `match: false` so they are not counted as hits. Single-chat searches only; the first 10 matches get context and a warning names the rest. 0, the default, returns matches alone.",
+     "maximum": 5,
+     "minimum": 0,
+     "title": "Context",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "SearchInput"
+  }
+ },
+ {
+  "name": "telegram_sessions",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "description": "Nothing but ``account``: the subject of this operation is the account itself.",
+   "title": "SessionsInput"
+  }
+ },
+ {
+  "name": "telegram_chat_topics",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link of a forum supergroup.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "limit": {
+     "default": 50,
+     "description": "Topics to return.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "search": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Only topics whose title matches this text (Telegram does the matching).",
+     "title": "Search"
+    },
+    "offset_date": {
+     "anyOf": [
+      {
+       "format": "date-time",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Cursor date returned by the previous page; use with both offset ids.",
+     "title": "Offset Date"
+    },
+    "offset_id": {
+     "default": 0,
+     "description": "Cursor top-message id returned by the previous page.",
+     "minimum": 0,
+     "title": "Offset Id",
+     "type": "integer"
+    },
+    "offset_topic": {
+     "default": 0,
+     "description": "Cursor topic id returned by the previous page.",
+     "minimum": 0,
+     "title": "Offset Topic",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ChatTopicsInput"
+  }
+ },
+ {
+  "name": "telegram_media_transcribe",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "description": "Chat id, @username, or t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat",
+     "type": "string"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "minimum": 1,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the voice message or audio file to transcribe. Omit only when the chat argument is a t.me link to that message.",
+     "title": "Message Id"
+    },
+    "language": {
+     "anyOf": [
+      {
+       "pattern": "^[a-z]{2}$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "ISO 639-1 code to transcribe as, e.g. 'ru'. Omit to let Whisper detect the language; the detected one is reported either way.",
+     "title": "Language"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "TranscribeInput"
+  }
+ },
+ {
+  "name": "telegram_watch",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to use. Omit when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chats": {
+     "anyOf": [
+      {
+       "items": {
+        "type": "string"
+       },
+       "maxItems": 20,
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Chat ids, @usernames or t.me links to watch. Omit to watch every chat the policy already permits reading. A value may also be a comma-separated list, which is what the terminal form used to require.",
+     "title": "Chats"
+    },
+    "timeout_sec": {
+     "default": 60.0,
+     "description": "Longest this call may block. Returning with no events at the end of it is a result, not an error.",
+     "exclusiveMinimum": 0,
+     "maximum": 300.0,
+     "title": "Timeout Sec",
+     "type": "number"
+    },
+    "debounce_sec": {
+     "default": 2.0,
+     "description": "How long the chat must stay quiet before the burst is handed back. Each new message restarts the window; 0 returns the first message alone.",
+     "maximum": 30.0,
+     "minimum": 0,
+     "title": "Debounce Sec",
+     "type": "number"
+    },
+    "limit": {
+     "default": 50,
+     "description": "Most messages to collect before returning even if the chat is still busy.",
+     "maximum": 500,
+     "minimum": 1,
+     "title": "Limit",
+     "type": "integer"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "title": "WatchInput"
+  }
+ },
+ {
+  "name": "telegram_plan_send_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "allow_duplicate": {
+     "default": false,
+     "description": "Send this even though an identical message has already gone to this chat recently. Off by default: the applier refuses a repeat, because the usual cause is a re-run nobody meant. Setting it says the repeat is intended, and the approval preview says so in as many words.",
+     "title": "Allow Duplicate",
+     "type": "boolean"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or phone-free user id.",
+     "title": "Chat"
+    },
+    "text": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "title": "Text",
+     "type": "string"
+    },
+    "silent": {
+     "default": false,
+     "description": "Deliver without a notification sound.",
+     "title": "Silent",
+     "type": "boolean"
+    },
+    "link_preview": {
+     "default": true,
+     "title": "Link Preview",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat",
+    "text"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "SendMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_reply_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "allow_duplicate": {
+     "default": false,
+     "description": "Send this even though an identical message has already gone to this chat recently. Off by default: the applier refuses a repeat, because the usual cause is a re-run nobody meant. Setting it says the repeat is intended, and the approval preview says so in as many words.",
+     "title": "Allow Duplicate",
+     "type": "boolean"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or a t.me link. A link that names the message supplies reply_to_message_id on its own.",
+     "title": "Chat"
+    },
+    "reply_to_message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "maximum": 2147483647,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message to answer. Omit when the chat argument is a link to it.",
+     "title": "Reply To Message Id"
+    },
+    "text": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "title": "Text",
+     "type": "string"
+    },
+    "silent": {
+     "default": false,
+     "title": "Silent",
+     "type": "boolean"
+    },
+    "link_preview": {
+     "default": true,
+     "title": "Link Preview",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat",
+    "text"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ReplyMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_send_file",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "allow_duplicate": {
+     "default": false,
+     "description": "Send this even though an identical message has already gone to this chat recently. Off by default: the applier refuses a repeat, because the usual cause is a re-run nobody meant. Setting it says the repeat is intended, and the approval preview says so in as many words.",
+     "title": "Allow Duplicate",
+     "type": "boolean"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or user id.",
+     "title": "Chat"
+    },
+    "path": {
+     "description": "The file to send: a name relative to paths.uploads, or an absolute path inside it. Anything resolving outside the permitted directories is refused, symlinks included. One file per plan.",
+     "minLength": 1,
+     "title": "Path",
+     "type": "string"
+    },
+    "caption": {
+     "default": "",
+     "description": "Text shown with the file. Telegram allows 1024 characters here.",
+     "maxLength": 1024,
+     "title": "Caption",
+     "type": "string"
+    },
+    "reply_to_message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Send it as a reply to this message.",
+     "title": "Reply To Message Id"
+    },
+    "as_document": {
+     "default": false,
+     "description": "Send the bytes unchanged, as a document, whatever the file's type — rather than letting Telegram re-encode an image or video into its compressed form.",
+     "title": "As Document",
+     "type": "boolean"
+    },
+    "silent": {
+     "default": false,
+     "description": "Deliver without a notification sound.",
+     "title": "Silent",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat",
+    "path"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "description": "One file, one chat.\n\nA list of paths would let one approval upload a directory, and the review\nstep exists to bound exactly that. The path is not a free choice either:\n:mod:`telegram_ai_cli_mcp.outbox` resolves it inside the configured outbox and\nrefuses anything outside, so this operation cannot be turned into \"post\n``~/.ssh/id_ed25519`` into a group chat\".",
+   "title": "SendFileInput"
+  }
+ },
+ {
+  "name": "telegram_plan_edit_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or a t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "maximum": 2147483647,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message to rewrite. Omit when the chat argument is a link to it.",
+     "title": "Message Id"
+    },
+    "text": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "title": "Text",
+     "type": "string"
+    }
+   },
+   "required": [
+    "chat",
+    "text"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "EditMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_delete_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or a t.me link. A link that names a message supplies message_ids on its own — one message.",
+     "title": "Chat"
+    },
+    "message_ids": {
+     "anyOf": [
+      {
+       "items": {
+        "exclusiveMinimum": 0,
+        "maximum": 2147483647,
+        "type": "integer"
+       },
+       "maxItems": 100,
+       "minItems": 1,
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Ids to delete. Omit when the chat argument is a link to the message.",
+     "title": "Message Ids"
+    },
+    "revoke": {
+     "default": true,
+     "description": "Delete for everyone, not only for this account.",
+     "title": "Revoke",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "description": "One or more messages in one chat, or the single one a link names.\n\n``message_ids`` is a list because deleting a run of one's own messages is a\nreal thing to do and Telegram takes them in one request. A link addresses\nexactly one message, so the two ways of naming do not add up: a link plus a\nlist of *other* ids is two different answers to \"which messages\", and\npicking either one silently deletes something nobody named.\n\nA one-element list naming the message the link already names is redundant,\nnot contradictory, and is accepted — the same rule ``message.edit`` applies\nto a scalar id. Refusing it here would make ``delete`` stricter than its\nneighbours over a disagreement that does not exist.",
+   "title": "DeleteMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_forward_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "allow_duplicate": {
+     "default": false,
+     "description": "Send this even though an identical message has already gone to this chat recently. Off by default: the applier refuses a repeat, because the usual cause is a re-run nobody meant. Setting it says the repeat is intended, and the approval preview says so in as many words.",
+     "title": "Allow Duplicate",
+     "type": "boolean"
+    },
+    "source_chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Source chat id, @username, or t.me link. A link that names a message supplies message_ids on its own.",
+     "title": "Source Chat"
+    },
+    "message_ids": {
+     "anyOf": [
+      {
+       "items": {
+        "exclusiveMinimum": 0,
+        "maximum": 2147483647,
+        "type": "integer"
+       },
+       "maxItems": 100,
+       "minItems": 1,
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Messages to forward. Omit for a source_chat link to one message.",
+     "title": "Message Ids"
+    },
+    "destination_chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "title": "Destination Chat"
+    },
+    "silent": {
+     "default": false,
+     "title": "Silent",
+     "type": "boolean"
+    },
+    "drop_author": {
+     "default": false,
+     "description": "Forward without attribution to the original sender.",
+     "title": "Drop Author",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "source_chat",
+    "destination_chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ForwardMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_mark_read",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "title": "Chat"
+    },
+    "max_message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Mark everything up to this id. Omit to mark the whole chat read.",
+     "title": "Max Message Id"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "MarkReadInput"
+  }
+ },
+ {
+  "name": "telegram_plan_join_chat",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "target": {
+     "description": "@username of a public chat, or a t.me/+HASH invite link.",
+     "title": "Target",
+     "type": "string"
+    }
+   },
+   "required": [
+    "target"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "JoinChatInput"
+  }
+ },
+ {
+  "name": "telegram_plan_leave_chat",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "title": "Chat"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "LeaveChatInput"
+  }
+ },
+ {
+  "name": "telegram_plan_create_group",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "title": {
+     "maxLength": 128,
+     "minLength": 1,
+     "title": "Title",
+     "type": "string"
+    },
+    "about": {
+     "default": "",
+     "maxLength": 255,
+     "title": "About",
+     "type": "string"
+    },
+    "kind": {
+     "default": "supergroup",
+     "description": "supergroup: everybody admitted can post. channel: a broadcast, where only admins post and everyone else reads. Neither gets a public link.",
+     "enum": [
+      "supergroup",
+      "channel"
+     ],
+     "title": "Kind",
+     "type": "string"
+    },
+    "users": {
+     "description": "Initial members. Each is checked against the admin policy.",
+     "items": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "string"
+       }
+      ]
+     },
+     "maxItems": 50,
+     "title": "Users",
+     "type": "array"
+    }
+   },
+   "required": [
+    "title"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "CreateGroupInput"
+  }
+ },
+ {
+  "name": "telegram_plan_invite_user",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "title": "Chat"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "title": "User"
+    }
+   },
+   "required": [
+    "chat",
+    "user"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "InviteUserInput"
+  }
+ },
+ {
+  "name": "telegram_plan_promote_admin",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "title": "Chat"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "title": "User"
+    },
+    "rights": {
+     "$ref": "#/$defs/AdminRights"
+    },
+    "rank": {
+     "default": "",
+     "description": "Custom admin title.",
+     "maxLength": 16,
+     "title": "Rank",
+     "type": "string"
+    }
+   },
+   "required": [
+    "chat",
+    "user",
+    "rights"
+   ],
+   "type": "object",
+   "$defs": {
+    "AdminRights": {
+     "additionalProperties": false,
+     "description": "The rights a promotion grants.\n\nEvery flag defaults to off, so a promotion grants exactly what was asked\nfor. ``anonymous`` is absent on purpose: an admin action nobody can\nattribute defeats the audit log this project keeps.",
+     "properties": {
+      "change_info": {
+       "default": false,
+       "title": "Change Info",
+       "type": "boolean"
+      },
+      "delete_messages": {
+       "default": false,
+       "title": "Delete Messages",
+       "type": "boolean"
+      },
+      "ban_users": {
+       "default": false,
+       "title": "Ban Users",
+       "type": "boolean"
+      },
+      "invite_users": {
+       "default": false,
+       "title": "Invite Users",
+       "type": "boolean"
+      },
+      "pin_messages": {
+       "default": false,
+       "title": "Pin Messages",
+       "type": "boolean"
+      },
+      "manage_call": {
+       "default": false,
+       "title": "Manage Call",
+       "type": "boolean"
+      },
+      "manage_topics": {
+       "default": false,
+       "title": "Manage Topics",
+       "type": "boolean"
+      },
+      "add_admins": {
+       "default": false,
+       "description": "Lets the promoted account promote others. Grant deliberately.",
+       "title": "Add Admins",
+       "type": "boolean"
+      }
+     },
+     "title": "AdminRights",
+     "type": "object"
+    }
+   },
+   "additionalProperties": false,
+   "title": "PromoteAdminInput"
+  }
+ },
+ {
+  "name": "telegram_plan_ban_user",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the group being moderated.",
+     "title": "Chat"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "The member to remove and block from returning. One person per plan.",
+     "title": "User"
+    }
+   },
+   "required": [
+    "chat",
+    "user"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "BanUserInput"
+  }
+ },
+ {
+  "name": "telegram_plan_unban_user",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the group being moderated.",
+     "title": "Chat"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "The member whose ban and restrictions are lifted. This does not add them back.",
+     "title": "User"
+    }
+   },
+   "required": [
+    "chat",
+    "user"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "UnbanUserInput"
+  }
+ },
+ {
+  "name": "telegram_plan_kick_user",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the group being moderated.",
+     "title": "Chat"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "The member to remove without banning them. One person per plan.",
+     "title": "User"
+    }
+   },
+   "required": [
+    "chat",
+    "user"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "KickUserInput"
+  }
+ },
+ {
+  "name": "telegram_plan_restrict_user",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the group being moderated.",
+     "title": "Chat"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "The member whose rights are taken away.",
+     "title": "User"
+    },
+    "restrictions": {
+     "$ref": "#/$defs/Restrictions",
+     "description": "Which rights to take away. At least one must be set."
+    },
+    "duration_seconds": {
+     "default": 0,
+     "description": "How long the restriction lasts, counted from the moment the plan is applied. 0 means until an admin lifts it; otherwise between 60 seconds and 31536000 (365 days).",
+     "title": "Duration Seconds",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "chat",
+    "user",
+    "restrictions"
+   ],
+   "type": "object",
+   "$defs": {
+    "Restrictions": {
+     "additionalProperties": false,
+     "description": "What a restricted member may no longer do.\n\nEvery field is a *prohibition* — ``send_messages=True`` means they may no\nlonger send messages — because that is how Telegram models it, and a layer\nthat inverted the sense would make the preview and the RPC disagree about\nwhich way round a flag reads. All default to off, so a restriction takes\naway exactly what was asked for.\n\n``view_messages`` is deliberately absent: taking that away *is* a ban, and\na ban is its own operation with its own irreversibility warning rather than\na flag hidden inside a rights object.",
+     "properties": {
+      "send_messages": {
+       "default": false,
+       "title": "Send Messages",
+       "type": "boolean"
+      },
+      "send_media": {
+       "default": false,
+       "description": "Photos, video, files — and GIFs, games and inline results with them.",
+       "title": "Send Media",
+       "type": "boolean"
+      },
+      "send_stickers": {
+       "default": false,
+       "title": "Send Stickers",
+       "type": "boolean"
+      },
+      "send_polls": {
+       "default": false,
+       "title": "Send Polls",
+       "type": "boolean"
+      },
+      "embed_links": {
+       "default": false,
+       "title": "Embed Links",
+       "type": "boolean"
+      },
+      "invite_users": {
+       "default": false,
+       "title": "Invite Users",
+       "type": "boolean"
+      },
+      "pin_messages": {
+       "default": false,
+       "title": "Pin Messages",
+       "type": "boolean"
+      },
+      "change_info": {
+       "default": false,
+       "title": "Change Info",
+       "type": "boolean"
+      }
+     },
+     "title": "Restrictions",
+     "type": "object"
+    }
+   },
+   "additionalProperties": false,
+   "title": "RestrictUserInput"
+  }
+ },
+ {
+  "name": "telegram_plan_demote_admin",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the group being moderated.",
+     "title": "Chat"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "The admin whose rights are taken away.",
+     "title": "User"
+    }
+   },
+   "required": [
+    "chat",
+    "user"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "DemoteAdminInput"
+  }
+ },
+ {
+  "name": "telegram_plan_set_profile",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "first_name": {
+     "anyOf": [
+      {
+       "maxLength": 64,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "First Name"
+    },
+    "last_name": {
+     "anyOf": [
+      {
+       "maxLength": 64,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Last Name"
+    },
+    "about": {
+     "anyOf": [
+      {
+       "maxLength": 70,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "About"
+    }
+   },
+   "type": "object",
+   "additionalProperties": false,
+   "title": "SetProfileInput"
+  }
+ },
+ {
+  "name": "telegram_plan_folder_add",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "folder": {
+     "description": "Folder id, or the name shown in Telegram — the same token `folders` prints.",
+     "title": "Folder",
+     "type": "string"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or t.me link.",
+     "title": "Chat"
+    }
+   },
+   "required": [
+    "folder",
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "FolderAddInput"
+  }
+ },
+ {
+  "name": "telegram_plan_react_message",
+  "inputSchema": {
+   "properties": {
+    "emoji": {
+     "anyOf": [
+      {
+       "maxLength": 16,
+       "minLength": 1,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "A standard emoji reaction, e.g. 👍. Not for custom emoji.",
+     "title": "Emoji"
+    },
+    "custom_emoji_id": {
+     "anyOf": [
+      {
+       "pattern": "^[0-9]{1,20}$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Document id of a custom emoji, as a string. Only chats that permit custom emoji reactions accept one; elsewhere Telegram refuses the whole request.",
+     "title": "Custom Emoji Id"
+    },
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or a t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "maximum": 2147483647,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message. Omit when the chat argument is a link to it.",
+     "title": "Message Id"
+    },
+    "keep_existing": {
+     "default": false,
+     "description": "Keep the reactions this account already left on that message and add this one alongside them. Only chats that allow several reactions per person accept it. The default replaces them.",
+     "title": "Keep Existing",
+     "type": "boolean"
+    },
+    "big": {
+     "default": false,
+     "description": "Send it as the bigger, longer animation everyone in the chat sees.",
+     "title": "Big",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ReactMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_unreact_message",
+  "inputSchema": {
+   "properties": {
+    "emoji": {
+     "anyOf": [
+      {
+       "maxLength": 16,
+       "minLength": 1,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "A standard emoji reaction, e.g. 👍. Not for custom emoji.",
+     "title": "Emoji"
+    },
+    "custom_emoji_id": {
+     "anyOf": [
+      {
+       "pattern": "^[0-9]{1,20}$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Document id of a custom emoji, as a string. Only chats that permit custom emoji reactions accept one; elsewhere Telegram refuses the whole request.",
+     "title": "Custom Emoji Id"
+    },
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or a t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "maximum": 2147483647,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message. Omit when the chat argument is a link to it.",
+     "title": "Message Id"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "UnreactMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_pin_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or a t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "maximum": 2147483647,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message. Omit when the chat argument is a link to it.",
+     "title": "Message Id"
+    },
+    "silent": {
+     "default": false,
+     "description": "Pin without notifying the members. The banner still appears for everyone; only the notification is suppressed.",
+     "title": "Silent",
+     "type": "boolean"
+    },
+    "both_sides": {
+     "default": false,
+     "description": "In a one-to-one conversation, pin for the other person too. The default pins only on this account's side. Meaningless anywhere else, and refused there rather than ignored.",
+     "title": "Both Sides",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "PinMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_unpin_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or a t.me link. A link that names the message supplies message_id on its own.",
+     "title": "Chat"
+    },
+    "message_id": {
+     "anyOf": [
+      {
+       "exclusiveMinimum": 0,
+       "maximum": 2147483647,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Id of the message. Omit when the chat argument is a link to it.",
+     "title": "Message Id"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "description": "Unpinning takes no `silent`: Telegram never announces one.",
+   "title": "UnpinMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_archive_chat",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or t.me link.",
+     "title": "Chat"
+    },
+    "archived": {
+     "default": true,
+     "description": "False moves the chat back out of Archived into the main list.",
+     "title": "Archived",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ArchiveChatInput"
+  }
+ },
+ {
+  "name": "telegram_plan_mute_chat",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or t.me link.",
+     "title": "Chat"
+    },
+    "muted": {
+     "default": true,
+     "description": "False turns notifications back on.",
+     "title": "Muted",
+     "type": "boolean"
+    },
+    "duration_seconds": {
+     "anyOf": [
+      {
+       "maximum": 31536000,
+       "minimum": 60,
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "How long to stay muted, in seconds. Omit it to mute until somebody unmutes the chat by hand. Counted from the moment the plan is applied.",
+     "title": "Duration Seconds"
+    }
+   },
+   "required": [
+    "chat"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "MuteChatInput"
+  }
+ },
+ {
+  "name": "telegram_plan_schedule_message",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id, @username, or phone-free user id.",
+     "title": "Chat"
+    },
+    "text": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "title": "Text",
+     "type": "string"
+    },
+    "at": {
+     "anyOf": [
+      {
+       "format": "date-time",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "When to send it: ISO-8601 with an explicit UTC offset, e.g. 2026-09-01T09:00:00+07:00. A time without an offset is refused rather than guessed; an epoch second is accepted too, being unambiguous by construction. At least two minutes and at most a year ahead; seconds are the resolution, and anything finer is dropped.",
+     "title": "At"
+    },
+    "when_online": {
+     "default": false,
+     "description": "Send as soon as the other person is next online — Telegram's own mode, one-to-one chats only. There is no fixed time, and if they are already online it goes out at once rather than waiting in the queue.",
+     "title": "When Online",
+     "type": "boolean"
+    },
+    "silent": {
+     "default": false,
+     "description": "Deliver without a notification sound.",
+     "title": "Silent",
+     "type": "boolean"
+    },
+    "link_preview": {
+     "default": true,
+     "title": "Link Preview",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "chat",
+    "text"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "ScheduleMessageInput"
+  }
+ },
+ {
+  "name": "telegram_plan_block_user",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Id or @username of the single person to block. This is a setting of this account, not a chat moderation action.",
+     "title": "User"
+    }
+   },
+   "required": [
+    "user"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "BlockUserInput"
+  }
+ },
+ {
+  "name": "telegram_plan_unblock_user",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "user": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Id or @username of the single person to unblock.",
+     "title": "User"
+    }
+   },
+   "required": [
+    "user"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "UnblockUserInput"
+  }
+ },
+ {
+  "name": "telegram_plan_set_chat_title",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the chat being changed.",
+     "title": "Chat"
+    },
+    "title": {
+     "maxLength": 128,
+     "minLength": 1,
+     "title": "Title",
+     "type": "string"
+    }
+   },
+   "required": [
+    "chat",
+    "title"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "SetChatTitleInput"
+  }
+ },
+ {
+  "name": "telegram_plan_set_chat_about",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the chat being changed.",
+     "title": "Chat"
+    },
+    "about": {
+     "description": "The new description. An empty string clears it, and the plan says so.",
+     "maxLength": 255,
+     "title": "About",
+     "type": "string"
+    }
+   },
+   "required": [
+    "chat",
+    "about"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "SetChatAboutInput"
+  }
+ },
+ {
+  "name": "telegram_plan_set_chat_photo",
+  "inputSchema": {
+   "properties": {
+    "account": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Account label to act as. Omit only when exactly one account is configured.",
+     "title": "Account"
+    },
+    "chat": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "description": "Chat id or @username of the chat being changed.",
+     "title": "Chat"
+    },
+    "path": {
+     "description": "JPEG or PNG to publish, named relative to paths.uploads. A path outside the outbox is refused by the same rule `message send-file` uses: the caller does not choose which of this machine's files reaches a chat.",
+     "title": "Path",
+     "type": "string"
+    }
+   },
+   "required": [
+    "chat",
+    "path"
+   ],
+   "type": "object",
+   "additionalProperties": false,
+   "title": "SetChatPhotoInput"
+  }
+ }
+]
