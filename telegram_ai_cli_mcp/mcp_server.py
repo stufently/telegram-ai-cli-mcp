@@ -54,6 +54,7 @@ from . import dispatch
 from .config import Settings, load_settings
 from .envelope import Envelope
 from .errors import InvalidInput, NotAllowlisted, ProfileForbidden, TelegramAIError
+from .ops._use_when import USE_WHEN
 from .opspec import REGISTRY, Effect, Operation
 from .render import sanitize_line
 from .roots import require_sanctioned_path
@@ -81,15 +82,49 @@ asking for one will not produce one.
 """
 
 
+def _first_sentence_end(text: str) -> int | None:
+    """Index just after the first sentence terminator, or ``None`` if there is none."""
+    for index, char in enumerate(text):
+        if char not in ".!?" or (index + 1 < len(text) and not text[index + 1].isspace()):
+            continue
+        return index + 1
+    return None
+
+
+def _with_use_when(description: str, when: str) -> str:
+    """Keep the opening sentence, then say when to call the tool.
+
+    The first sentence stays what the tool does. ``Use when`` is the next one,
+    so a long operation description does not bury the selection hint at the end.
+    """
+    when = when.strip()
+    if not when:
+        return description
+    if not when.lower().startswith("use when"):
+        when = "Use when " + when
+    description = description.strip()
+    end = _first_sentence_end(description)
+    if end is None:
+        if description and description[-1] not in ".!?":
+            description += "."
+        return f"{description} {when}"
+    head = description[:end].rstrip()
+    tail = description[end:].lstrip()
+    if tail:
+        return f"{head} {when} {tail}"
+    return f"{head} {when}"
+
+
 def _tool_for(op: Operation, *, plan: bool) -> types.Tool:
     name = op.plan_tool if plan else op.mcp_tool
     if name is None:  # guaranteed by Registry.check_invariants; belt and braces
         raise ValueError(f"{op.name} has no tool name for plan={plan}")
-    description = op.description or op.summary
+    description = _with_use_when(op.description or op.summary, USE_WHEN.get(op.name, ""))
     if plan:
         description += (
             "\n\nPrepares a plan and returns its id. Nothing is sent. A person applies "
-            "it from a terminal; this server cannot."
+            "it from a terminal; this server cannot. Use when the user wants this change "
+            "prepared for a person to review; this call does not perform it."
         )
     return types.Tool(
         name=name,

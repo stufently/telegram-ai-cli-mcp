@@ -3,6 +3,7 @@
 # even if a Dockerfile stage were ever changed to COPY . . carelessly.
 .git/
 .github/
+dist-mcpb/
 docs/
 tests/
 *.md

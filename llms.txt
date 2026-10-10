@@ -40,8 +40,9 @@
 ## Primary sources
 
 - [README](https://github.com/stufently/telegram-ai-cli-mcp/blob/main/README.md):
-  what it does, install and configure, how to add it to Claude Code, Claude
-  Desktop, Codex or Cursor, the MCP tool list, the JSON contract, and an FAQ
+  what it does, the one-step `uvx` install, how to add it to Claude Code,
+  Claude Desktop (including the `.mcpb` on the GitHub release), Cursor,
+  Windsurf, Zed or Codex, the MCP tool list, the JSON contract, and an FAQ
   written against real questions people ask about Telegram automation and MCP.
 - [SECURITY.md](https://github.com/stufently/telegram-ai-cli-mcp/blob/main/SECURITY.md):
   vulnerability reporting (GitHub Security Advisories, not email), scope, and

@@ -9,6 +9,20 @@ before that, breaking changes can happen on any `0.x` release.
 
 ### Added
 
+- **Tool descriptions now say when to call each tool.** Every published tool
+  opens with what it does and a separate `Use when` sentence, including which
+  neighbouring tool to call instead. Names, input schemas and the annotation
+  rules (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`)
+  are unchanged.
+- **One install command, and a JSON block per client.** The README starts from
+  `uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp`,
+  the same command Claude Code, Claude Desktop, Cursor, Windsurf and Zed run.
+  Example prompts are tasks in plain language, not tool names.
+- **A Claude Desktop extension (`.mcpb`).** `scripts/build-mcpb.sh` packs it
+  with the pinned `mcpb` CLI and attaches nothing to PyPI. The release workflow
+  uploads `dist-mcpb/*.mcpb` onto the draft GitHub Release. Sign in first with
+  `tg-ai account login`; the server still sends nothing by itself.
+
 - **`tg-ai folder add` — put a chat into one of the account's chat folders**,
   planned and applied like every other write (`telegram_plan_folder_add`).
   Telegram has no call that adds one chat: `UpdateDialogFilter` replaces the
