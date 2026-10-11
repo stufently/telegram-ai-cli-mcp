@@ -7,6 +7,10 @@ before that, breaking changes can happen on any `0.x` release.
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-10-11
+
+First release on PyPI.
+
 ### Added
 
 - **Tool descriptions now say when to call each tool.** Every published tool
