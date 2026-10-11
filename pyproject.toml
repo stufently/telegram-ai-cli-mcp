@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "telegram-ai-cli-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "AI-first CLI and MCP server for Telegram user accounts over MTProto, with plan-and-apply approval, chat allowlists and an audit log for every outgoing message."
 readme = "README.md"
 license = "MIT"
@@ -84,6 +84,7 @@ Security = "https://github.com/stufently/telegram-ai-cli-mcp/blob/main/SECURITY.
 
 [project.scripts]
 tg-ai = "telegram_ai_cli_mcp.cli:main"
+telegram-ai-cli-mcp = "telegram_ai_cli_mcp.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["telegram_ai_cli_mcp*"]

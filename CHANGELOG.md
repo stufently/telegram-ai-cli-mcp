@@ -7,6 +7,19 @@ before that, breaking changes can happen on any `0.x` release.
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-10-11
+
+Listing in the official MCP registry.
+
+### Added
+
+- `server.json` for registry.modelcontextprotocol.io and the `mcp-name` marker
+  in the README that the registry checks on PyPI.
+- A `telegram-ai-cli-mcp` command, the same as `tg-ai`: registry clients run a
+  PyPI package by its own name (`uvx telegram-ai-cli-mcp mcp`).
+- `.github/workflows/registry.yml`: on a `v*` tag, waits for the version on
+  PyPI and publishes `server.json` to the registry over GitHub OIDC.
+
 ## [0.1.0] — 2026-10-11
 
 First release on PyPI.

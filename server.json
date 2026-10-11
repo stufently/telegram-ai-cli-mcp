@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stufently/telegram-ai-cli-mcp",
+  "title": "Telegram AI CLI MCP",
+  "description": "Read a personal Telegram account over MTProto; every write is a plan a human applies.",
+  "repository": {
+    "url": "https://github.com/stufently/telegram-ai-cli-mcp",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "telegram-ai-cli-mcp",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ],
+      "environmentVariables": [
+        {
+          "description": "readonly (default) or plan: plan lets the agent prepare plans, never apply them",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "default": "readonly",
+          "choices": ["readonly", "plan"],
+          "name": "TGAI_PROFILE"
+        },
+        {
+          "description": "Path to tgai.yaml if not ~/.config/telegram-ai-cli-mcp/tgai.yaml",
+          "isRequired": false,
+          "format": "filepath",
+          "isSecret": false,
+          "name": "TGAI_CONFIG"
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # telegram-ai-cli-mcp — CLI and MCP server for AI agents on a personal Telegram account
 
+<!-- mcp-name: io.github.stufently/telegram-ai-cli-mcp -->
+
 [![CI](https://github.com/stufently/telegram-ai-cli-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/stufently/telegram-ai-cli-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue.svg)](#compatibility)
