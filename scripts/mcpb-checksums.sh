@@ -51,7 +51,10 @@ if [ "${#bundles[@]}" -eq 0 ]; then
   exit 1
 fi
 
-mapfile -t names < <(printf '%s\n' "${bundles[@]}" | LC_ALL=C sort)
+# A bundle name may contain a newline. Sorting on lines would split that name
+# and hand sha256sum a path that is not the bundle. NUL keeps the name whole;
+# names without a newline stay in the same LC_ALL=C order as a line sort.
+mapfile -d '' names < <(printf '%s\0' "${bundles[@]}" | LC_ALL=C sort -z)
 
 sums_dir=$(dirname -- "$sums")
 tmp=$(mktemp "${sums_dir}/.mcpb-checksums.XXXXXX")
