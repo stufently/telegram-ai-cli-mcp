@@ -7,6 +7,12 @@ before that, breaking changes can happen on any `0.x` release.
 
 ## [Unreleased]
 
+### Added
+
+- GitHub Releases include `checksums.txt` in `sha256sum` format, with a SHA256
+  for every `.mcpb` bundle as well as the wheel and sdist. The previous
+  `SHA256SUMS.txt` asset name is no longer published.
+
 ## [0.1.1] — 2026-10-11
 
 Listing in the official MCP registry.
