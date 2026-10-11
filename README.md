@@ -313,6 +313,15 @@ and open it. Claude Desktop installs the extension and asks for the profile
 the extension cannot prompt for a login code, and the server sends nothing
 by itself.
 
+The same release includes `checksums.txt`, with a SHA256 for every `.mcpb`.
+From the directory where you downloaded the bundle:
+
+```bash
+sha256sum -c --ignore-missing checksums.txt   # run next to the downloaded .mcpb
+```
+
+On macOS, `shasum -a 256 -c --ignore-missing checksums.txt` is the same check.
+
 ### Cursor
 
 File: `~/.cursor/mcp.json` (every project) or `.cursor/mcp.json` (this project).
