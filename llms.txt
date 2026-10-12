@@ -14,7 +14,7 @@
 
 ## Key facts
 
-- Package/command: `telegram-ai-cli-mcp` on PyPI (latest release 0.1.1),
+- Package/command: `telegram-ai-cli-mcp` on PyPI (latest release 0.1.2),
   CLI binary `tg-ai`.
 - License: MIT.
 - Language: Python, requires 3.12+.
@@ -30,7 +30,7 @@
   `⟦untrusted⟧ … ⟦/untrusted⟧`, and the delimiter characters are replaced with
   ASCII lookalikes inside wrapped content so a sender cannot forge or close the
   wrapper. Not configurable.
-- Status as of 2026-10: 0.1.1 is published on PyPI (a `v*` tag publishes over
+- Status as of 2026-10: 0.1.2 is published on PyPI (a `v*` tag publishes over
   Trusted Publishing) and listed in the official MCP Registry as
   `io.github.stufently/telegram-ai-cli-mcp`. Pre-1.0: a breaking change can come
   in any `0.x` release, and the changelog names it.
