@@ -23,6 +23,15 @@ default `readonly` profile, which does not publish them. Say so and stop: the
 operator opts in with `TGAI_PROFILE=plan` (or `profile: plan`) and restarts the
 server. Do not retry a plan tool by name — it is refused under `readonly`.
 
+The server this plugin starts is pinned to `readonly`: `plugin.mcp.json` sets
+`TGAI_PROFILE=readonly`, and the environment wins over `profile: plan` in the
+config file and over a `TGAI_PROFILE` exported in the shell. So under the plugin,
+tell the operator how to opt in rather than to edit the config: register the
+server once more with the plan profile, for example
+`claude mcp add telegram-plan --env TGAI_PROFILE=plan -- tg-ai mcp`, and restart
+Claude Code. The plan tools then come from that server; this skill keeps working,
+and the plugin's own server can stay as it is or be disabled in `/mcp`.
+
 ## What to do instead
 
 1. Read enough to write the right thing (`telegram_chat_read`, `telegram_search`).

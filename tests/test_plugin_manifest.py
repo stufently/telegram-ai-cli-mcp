@@ -137,6 +137,17 @@ def test_the_server_is_launched_by_the_command_this_package_installs() -> None:
     assert server["args"] == ["mcp"]
 
 
+def test_the_plugin_server_is_pinned_to_the_readonly_profile() -> None:
+    """The plugin's server must not inherit a wider profile from the machine.
+
+    Without an explicit `TGAI_PROFILE` it would follow `profile: plan` in the
+    operator's `tgai.yaml` or a `TGAI_PROFILE` exported in the shell, and the
+    plugin would publish plan tools nobody chose for it.
+    """
+    mcp = json.loads((REPO_ROOT / "plugin.mcp.json").read_text())
+    assert mcp["mcpServers"]["telegram"].get("env", {}).get("TGAI_PROFILE") == "readonly"
+
+
 # --- the skills -------------------------------------------------------------
 
 
