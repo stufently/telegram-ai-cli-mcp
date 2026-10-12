@@ -78,15 +78,20 @@ sender cannot forge them, are in
 
 | Value | What it permits |
 | --- | --- |
-| `readonly` (default) | Read operations only. Every `plan_*` operation refuses with `FORBIDDEN_BY_PROFILE`. |
-| `plan` | Read, plus *creating* plans. Applying is still only `tg-ai plan apply`. |
+| `readonly` (default) | Read operations only. Every `plan_*` operation refuses with `FORBIDDEN_BY_PROFILE`, and the MCP server does not publish the `telegram_plan_*` tools at all — not in the tool list, not on the call path. |
+| `plan` | Read, plus *creating* plans; the MCP server publishes the `telegram_plan_*` tools. Applying is still only `tg-ai plan apply`. |
 
 ```yaml
 profile: plan
 ```
 
 `TGAI_PROFILE=plan`. Least privilege is the default deliberately: an MCP client
-that only needs to read never needs the ability to write a plan.
+that only needs to read never needs the ability to write a plan, and a tool it
+cannot use is not a tool it should be shown. The local tools
+(`telegram_media_fetch`, `telegram_media_transcribe`, `telegram_archive_sync`,
+`telegram_archive_forget`) are published in both profiles: they write only into
+`paths.downloads` / `paths.archive`, checked against the client's roots, and
+change nothing on Telegram.
 
 ## Application credentials
 
@@ -383,7 +388,7 @@ Two requirements on the directory itself, both fail-closed:
 
 | Key | Default | Meaning |
 | --- | --- | --- |
-| `mcp.tools` | unset | Which tool names the MCP server publishes. Unset = all of them |
+| `mcp.tools` | unset | Which tool names the MCP server publishes. Unset = every tool the [`profile`](#profile) publishes |
 
 ```yaml
 mcp:
@@ -406,7 +411,8 @@ denylist all still run underneath, and the gate can never reach past them.
 Three behaviours follow, and each is a deliberate answer to a question that has
 a defensible opposite:
 
-- **Unset means every tool**, exactly as before this setting existed. The gate
+- **Unset means every tool the profile publishes** — under the default
+  `readonly`, that excludes every `telegram_plan_*` tool. The gate
   is opt-in. The empty-`allow`-means-nothing convention elsewhere in this file
   protects against a list that was empty because nobody filled it in; here the
   same default would make a fresh install publish nothing at all, and the first
@@ -419,7 +425,9 @@ a defensible opposite:
   publish: telegram_chatz`, naming every unknown entry at once. A silent drop
   would turn a typo into a tool that is missing for a reason nobody can see, and
   a warning on the stderr of a stdio server is a line the client swallows. It is
-  the same fail-loud rule as a relative `paths.uploads`.
+  the same fail-loud rule as a relative `paths.uploads`. A `telegram_plan_*`
+  name under `profile: readonly` is refused the same way: the profile does not
+  publish it, and the gate cannot add it.
 
 The gate filters the **call path** as well as the tool list. A hidden tool
 invoked by name is refused with `FORBIDDEN_BY_ALLOWLIST`; a filter that only

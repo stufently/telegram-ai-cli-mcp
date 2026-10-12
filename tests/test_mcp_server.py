@@ -70,9 +70,11 @@ async def test_the_reaction_reader_is_published_as_a_read_tool() -> None:
 
 
 @pytest.mark.asyncio
-async def test_every_tool_says_when_to_call_it() -> None:
+async def test_every_tool_says_when_to_call_it(monkeypatch: pytest.MonkeyPatch) -> None:
     """The description is what selects the tool. A short one with no situation
     is how an agent calls the neighbour, or asks before it should."""
+    # Plan tools are published only under `plan`; this checks all of them.
+    monkeypatch.setenv("TGAI_PROFILE", "plan")
     from telegram_ai_cli_mcp.ops._use_when import USE_WHEN
     from telegram_ai_cli_mcp.opspec import REGISTRY
 

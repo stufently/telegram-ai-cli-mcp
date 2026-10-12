@@ -39,6 +39,22 @@ jobs:
       # silently drift apart into two different lint configs.
       - run: make lint
 
+  # The workflows themselves, so a broken release.yml is a red pull request and
+  # not a failed tag. release.yml only runs on a tag, and a tag is a version
+  # number spent; this is the only place its syntax and expressions are checked
+  # before then. The image is pinned by digest (resolved from Docker Hub on
+  # 2026-10-12): rhysd/actionlint 1.7.12.
+  actionlint:
+    name: lint (actionlint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check every workflow file
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/repo:ro -w /repo \
+            rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 \
+            -color
+
   test:
     name: test (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
@@ -76,6 +92,48 @@ jobs:
       # on its own can meaningfully fail this job.
       - name: MCP stdio smoke test
         run: python scripts/smoke_mcp.py
+
+  # A release, rehearsed. The same commands release.yml runs to build the wheel,
+  # the sdist and the .mcpb and to write checksums.txt, then the check a user
+  # runs on the downloads: every line verifies, and every artifact has a line.
+  # Nothing is uploaded or attested here — attestations need the release
+  # workflow's OIDC token — but a checksum step that would fail on a tag fails
+  # in the pull request first.
+  release-artifacts:
+    name: release artifacts (dry run + checksums)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - name: Install build backend
+        run: python -m pip install --constraint constraints.txt build twine
+      - name: Build distributions
+        env:
+          PIP_CONSTRAINT: ${{ github.workspace }}/constraints.txt
+        run: python -m build --sdist --wheel --outdir dist/
+      - name: Generate checksums (as release.yml does)
+        run: |
+          mkdir -p checksums
+          (cd dist && sha256sum -- *) > checksums/checksums.txt
+      - name: Build the mcpb bundle
+        run: bash scripts/build-mcpb.sh
+      - name: Add the mcpb bundle to the checksums (as release.yml does)
+        run: bash scripts/mcpb-checksums.sh dist-mcpb checksums/checksums.txt
+      - name: Verify the downloads the way a user would
+        run: |
+          mkdir release
+          cp dist/* dist-mcpb/*.mcpb checksums/checksums.txt release/
+          cd release
+          cat checksums.txt
+          sha256sum -c --strict checksums.txt
+          artifacts="$(find . -maxdepth 1 -type f ! -name checksums.txt | wc -l)"
+          lines="$(wc -l < checksums.txt)"
+          if [ "$artifacts" != 3 ] || [ "$lines" != "$artifacts" ]; then
+            echo "::error::expected 3 artifacts each with one checksum line, got $artifacts artifacts and $lines lines"
+            exit 1
+          fi
 
   container:
     name: container (build + non-root)
