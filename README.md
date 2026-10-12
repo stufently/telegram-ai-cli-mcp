@@ -13,7 +13,7 @@ It is for people who want an AI agent to have a hand on their own Telegram — t
 
 This automates a **personal** Telegram account (MTProto), not a bot account (Bot API). Telegram can limit or permanently ban accounts it judges to be running abusive automation — mass joins, high-volume sends, scraping members. Using this tool against your own account is at your own risk; see [Why not another MTProto wrapper](#why-not-another-mtproto-wrapper) for why a personal account behaves differently from a bot in the first place.
 
-> **Status: v0.1 release candidate.** The repository-side implementation is complete and awaiting the external PyPI/GitHub release setup listed in [`TASKS.md`](TASKS.md). Command names and flags may still move before the first tagged release; deliberate non-goals and accepted local-boundary risks are recorded in [`docs/product-boundaries.md`](docs/product-boundaries.md).
+> **Status: 0.1.x, on [PyPI](https://pypi.org/project/telegram-ai-cli-mcp/).** Before `1.0.0` a breaking change can come in any `0.x` release, and the [changelog](CHANGELOG.md) names it; deliberate non-goals and accepted local-boundary risks are recorded in [`docs/product-boundaries.md`](docs/product-boundaries.md).
 
 ```bash
 tg-ai account add --label work
@@ -115,20 +115,20 @@ Importing a `tdata` folder from Telegram Desktop is one way to authorize an acco
 ## Install
 
 ```bash
-uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp
+uvx --from telegram-ai-cli-mcp tg-ai mcp
 ```
 
 That one command is the server. It speaks MCP on stdin and waits; every client block below runs the same `uvx` command. Sign the account in first, from a terminal, because neither the server nor the Desktop extension can prompt for a login code:
 
 ```bash
-uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai account login --label work --phone "<your phone, E.164>"
+uvx --from telegram-ai-cli-mcp tg-ai account login --label work --phone "<your phone, E.164>"
 ```
 
 `--label` names the account; put your own number in E.164 form; `--phone` is needed only on the first sign-in of that label. `account login-qr --label work` signs in by QR code instead, with no phone number.
 
 The session is stored under `~/.local/state/telegram-ai-cli-mcp/`. The server sends nothing by itself: a plan tool records an intention, and a person applies it with `tg-ai plan apply`.
 
-Not on PyPI yet. The release pipeline is in place ([Releasing](#releasing)) and publishes from a `v*` tag over Trusted Publishing, but it cannot run until the one-time registration on PyPI's side is done — and claiming a name on a public registry is permanent, so that step is the owner's to take deliberately. Until that registration exists, `uvx telegram-ai-cli-mcp` (a PyPI package name, with no `--from`) does nothing useful. The `uvx --from git+…` command above is the install path. A checkout still works, for development:
+The package is `telegram-ai-cli-mcp` on [PyPI](https://pypi.org/project/telegram-ai-cli-mcp/); `uvx` caches what it installed and may keep running that version; `--from telegram-ai-cli-mcp@latest` checks PyPI again, and `--from telegram-ai-cli-mcp==0.1.1` pins one. This README follows `main`, so what the [changelog](CHANGELOG.md) lists under *Unreleased* is not in the PyPI release yet — in 0.1.1, for one, the `telegram_plan_*` tools are still listed under the `readonly` profile, though every call to them is refused. To run `main` itself, use `uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp`. For a lasting `tg-ai` on `PATH`, `pipx install telegram-ai-cli-mcp` or `uv tool install telegram-ai-cli-mcp`. A checkout still works, for development:
 
 ```bash
 git clone https://github.com/stufently/telegram-ai-cli-mcp.git
@@ -244,7 +244,7 @@ Project file: `.mcp.json` in the project root.
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "telegram-ai-cli-mcp",
         "tg-ai",
         "mcp"
       ],
@@ -259,7 +259,7 @@ Project file: `.mcp.json` in the project root.
 Or from the terminal. Add `--env TGAI_PROFILE=plan` when the agent should be able to prepare plans (nothing is ever sent without `tg-ai plan apply` — see [Safety](#safety) for what that promises when the client is Claude Code itself):
 
 ```bash
-claude mcp add telegram -- uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp
+claude mcp add telegram -- uvx --from telegram-ai-cli-mcp tg-ai mcp
 ```
 
 #### Or as a plugin
@@ -275,9 +275,8 @@ claude plugin install telegram-ai-cli-mcp@stufently-telegram
 ```
 
 The plugin supplies the server definition and the skills; it does not install
-the program. `tg-ai` still has to be on `PATH` — until the first PyPI release
-that means `pipx install git+https://github.com/stufently/telegram-ai-cli-mcp`, or
-this repo checked out and installed — and the account still has to be signed in
+the program. `tg-ai` still has to be on `PATH` — `pipx install telegram-ai-cli-mcp`
+or `uv tool install telegram-ai-cli-mcp`, or this repo checked out and installed — and the account still has to be signed in
 with `tg-ai account login`, because a plugin cannot prompt for a login code.
 The `uvx` blocks above do not put `tg-ai` on `PATH`; the plugin still needs one
 of those installs.
@@ -296,7 +295,7 @@ File: `claude_desktop_config.json` — macOS
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "telegram-ai-cli-mcp",
         "tg-ai",
         "mcp"
       ],
@@ -347,7 +346,7 @@ File: `~/.cursor/mcp.json` (every project) or `.cursor/mcp.json` (this project).
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "telegram-ai-cli-mcp",
         "tg-ai",
         "mcp"
       ],
@@ -373,7 +372,7 @@ File: `mcp_config.json` — macOS and Linux `~/.config/devin/mcp_config.json`
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "telegram-ai-cli-mcp",
         "tg-ai",
         "mcp"
       ],
@@ -396,7 +395,7 @@ File: `settings.json` — Linux and macOS `~/.config/zed/settings.json`.
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/stufently/telegram-ai-cli-mcp",
+        "telegram-ai-cli-mcp",
         "tg-ai",
         "mcp"
       ],

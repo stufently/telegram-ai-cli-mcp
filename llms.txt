@@ -14,8 +14,8 @@
 
 ## Key facts
 
-- Package/command: `telegram-ai-cli-mcp` (the intended PyPI name; nothing is
-  claimed there yet and nothing is published), CLI binary `tg-ai`.
+- Package/command: `telegram-ai-cli-mcp` on PyPI (latest release 0.1.1),
+  CLI binary `tg-ai`.
 - License: MIT.
 - Language: Python, requires 3.12+.
 - Protocol library: Telethon (MTProto), not the Telegram Bot API.
@@ -30,12 +30,10 @@
   `⟦untrusted⟧ … ⟦/untrusted⟧`, and the delimiter characters are replaced with
   ASCII lookalikes inside wrapped content so a sender cannot forge or close the
   wrapper. Not configurable.
-- Status as of 2026-08: v0.1 release candidate, the same wording the README
-  carries. The repository-side implementation is complete. Not published to
-  PyPI or an MCP registry. The PyPI pipeline exists (a `v*` tag publishes over
-  Trusted Publishing) and waits on a one-time registration the repository owner
-  makes deliberately, because a package name in a public registry is claimed
-  permanently; the MCP registry remains a separate, undecided question.
+- Status as of 2026-10: 0.1.1 is published on PyPI (a `v*` tag publishes over
+  Trusted Publishing) and listed in the official MCP Registry as
+  `io.github.stufently/telegram-ai-cli-mcp`. Pre-1.0: a breaking change can come
+  in any `0.x` release, and the changelog names it.
 
 ## Primary sources
 
