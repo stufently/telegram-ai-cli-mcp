@@ -128,7 +128,7 @@ uvx --from telegram-ai-cli-mcp tg-ai account login --label work --phone "<your p
 
 The session is stored under `~/.local/state/telegram-ai-cli-mcp/`. The server sends nothing by itself: a plan tool records an intention, and a person applies it with `tg-ai plan apply`.
 
-The package is `telegram-ai-cli-mcp` on [PyPI](https://pypi.org/project/telegram-ai-cli-mcp/); `uvx` caches what it installed and may keep running that version; `--from telegram-ai-cli-mcp@latest` checks PyPI again, and `--from telegram-ai-cli-mcp==0.1.1` pins one. This README follows `main`, so what the [changelog](CHANGELOG.md) lists under *Unreleased* is not in the PyPI release yet — in 0.1.1, for one, the `telegram_plan_*` tools are still listed under the `readonly` profile, though every call to them is refused. To run `main` itself, use `uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp`. For a lasting `tg-ai` on `PATH`, `pipx install telegram-ai-cli-mcp` or `uv tool install telegram-ai-cli-mcp`. A checkout still works, for development:
+The package is `telegram-ai-cli-mcp` on [PyPI](https://pypi.org/project/telegram-ai-cli-mcp/); `uvx` caches what it installed and may keep running that version; `--from telegram-ai-cli-mcp@latest` checks PyPI again, and `--from telegram-ai-cli-mcp==0.1.2` pins one. This README follows `main`, so what the [changelog](CHANGELOG.md) lists under *Unreleased* is not in the PyPI release yet. Since 0.1.2 the `readonly` profile lists no `telegram_plan_*` tool; 0.1.1 and earlier still list them under `readonly` and refuse every call, so a `uvx` cache holding one of those shows plan tools that do not work. To run `main` itself, use `uvx --from git+https://github.com/stufently/telegram-ai-cli-mcp tg-ai mcp`. For a lasting `tg-ai` on `PATH`, `pipx install telegram-ai-cli-mcp` or `uv tool install telegram-ai-cli-mcp`. A checkout still works, for development:
 
 ```bash
 git clone https://github.com/stufently/telegram-ai-cli-mcp.git
@@ -280,6 +280,15 @@ or `uv tool install telegram-ai-cli-mcp`, or this repo checked out and installed
 with `tg-ai account login`, because a plugin cannot prompt for a login code.
 The `uvx` blocks above do not put `tg-ai` on `PATH`; the plugin still needs one
 of those installs.
+
+The plugin's server runs with `TGAI_PROFILE=readonly` set in `plugin.mcp.json`.
+The environment wins over the config file, so `profile: plan` in `tgai.yaml` does
+not publish plan tools through the plugin. To prepare plans from Claude Code,
+add the server yourself with the plan profile next to the plugin:
+
+```bash
+claude mcp add telegram-plan --env TGAI_PROFILE=plan -- tg-ai mcp
+```
 
 ### Claude Desktop
 

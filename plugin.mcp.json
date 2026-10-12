@@ -2,7 +2,10 @@
   "mcpServers": {
     "telegram": {
       "command": "tg-ai",
-      "args": ["mcp"]
+      "args": ["mcp"],
+      "env": {
+        "TGAI_PROFILE": "readonly"
+      }
     }
   }
 }

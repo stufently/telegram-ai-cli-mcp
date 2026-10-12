@@ -7,8 +7,15 @@ before that, breaking changes can happen on any `0.x` release.
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-10-12
+
 ### Changed
 
+- The Claude Code plugin pins its server to the `readonly` profile:
+  `plugin.mcp.json` sets `TGAI_PROFILE=readonly`. The environment wins over the
+  config file, so `profile: plan` in `tgai.yaml` no longer reaches the plugin's
+  server; the README and the `telegram-write-by-plan` skill say how to add a
+  second server with `TGAI_PROFILE=plan` for preparing plans.
 - **The MCP server is read-only by default.** Under the default `readonly`
   profile it no longer publishes any `telegram_plan_*` tool: they are absent from
   `tools/list`, and calling one by name is refused with `FORBIDDEN_BY_PROFILE`
