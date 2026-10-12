@@ -77,8 +77,10 @@ Read operations run immediately. Nothing else does — every operation that chan
 | Caller | Read | Plan | Apply |
 | --- | --- | --- | --- |
 | CLI, a person at a terminal | immediate | `tg-ai message send …` (each write operation is its own command; it saves a plan and prints the id) | `tg-ai plan apply <id>` |
-| MCP client with no shell access (Claude Desktop, most IDE/editor integrations) | immediate | `telegram_plan_<operation>` tool | not reachable — there is no MCP tool that applies a plan |
-| MCP client that *also* has its own shell (Claude Code, Codex, and similar coding agents) | immediate | `telegram_plan_<operation>` tool | can run `tg-ai plan apply <id>` itself, through its own shell — see the note below |
+| MCP client with no shell access (Claude Desktop, most IDE/editor integrations) | immediate | `telegram_plan_<operation>` tool — **only under `profile: plan`**; the default `readonly` profile does not publish plan tools at all | not reachable — there is no MCP tool that applies a plan |
+| MCP client that *also* has its own shell (Claude Code, Codex, and similar coding agents) | immediate | `telegram_plan_<operation>` tool — **only under `profile: plan`** | can run `tg-ai plan apply <id>` itself, through its own shell — see the note below |
+
+**Read-only by default, writing by explicit opt-in.** A fresh install runs the `readonly` profile, and its MCP tool list contains no `telegram_plan_*` tool: a client sees the read tools and four local tools that write only into configured directories on this machine (see [MCP tools](#mcp-tools)), and a plan tool called by name anyway is refused with `FORBIDDEN_BY_PROFILE` before anything runs. Publishing the plan tools takes `profile: plan` in the config or `TGAI_PROFILE=plan` in the client's environment — and even then nothing is sent until a person runs `tg-ai plan apply`.
 
 A write command never sends anything by itself — it records a plan and tells you how to carry it out:
 
@@ -101,7 +103,7 @@ For that class of client, this design does not pretend to hold a hard line at pl
 
 ### Reading, chats and profiles
 
-Groups and channels are readable as soon as an account is configured; **direct messages are not readable until a chat id is explicitly allowlisted** — an empty `dms` allowlist means none, not all. `777000` (Telegram Service Notifications, where login codes and 2FA resets arrive) and Saved Messages are closed in code and cannot be reopened by any configuration. Every write capability (`send`, `admin`, `join`, profile changes) is fail-closed the same way: an empty list means nothing is permitted until you add to it. Two profiles exist — `readonly` (default: only the read tools work) and `plan` (read, plus creating plans). See [`telegram_ai_cli_mcp/safety.py`](telegram_ai_cli_mcp/safety.py) for the exact rule order.
+Groups and channels are readable as soon as an account is configured; **direct messages are not readable until a chat id is explicitly allowlisted** — an empty `dms` allowlist means none, not all. `777000` (Telegram Service Notifications, where login codes and 2FA resets arrive) and Saved Messages are closed in code and cannot be reopened by any configuration. Every write capability (`send`, `admin`, `join`, profile changes) is fail-closed the same way: an empty list means nothing is permitted until you add to it. Two profiles exist — `readonly` (default: only the read and local tools are published) and `plan` (read, plus creating plans; the plan tools appear only under it). See [`telegram_ai_cli_mcp/safety.py`](telegram_ai_cli_mcp/safety.py) for the exact rule order.
 
 ### Importing an existing session
 
@@ -229,7 +231,7 @@ Ask in plain language. The server picks the tool.
 
 ## Add the MCP server to your AI client
 
-The MCP client never handles a Telegram credential directly — the server resolves the account's session from local state, not from anything passed over MCP. Every JSON block below runs the same `uvx` command as [Install](#install). `TGAI_PROFILE` is `readonly` (the default; reads only) or `plan` (reads, plus preparing plans a person applies). There is no profile that sends.
+The MCP client never handles a Telegram credential directly — the server resolves the account's session from local state, not from anything passed over MCP. Every JSON block below runs the same `uvx` command as [Install](#install). `TGAI_PROFILE` is `readonly` (the default; reads only — no `telegram_plan_*` tool is even listed) or `plan` (reads, plus the plan tools for preparing changes a person applies). There is no profile that sends.
 
 ### Claude Code
 
@@ -321,6 +323,18 @@ sha256sum -c --ignore-missing checksums.txt   # run next to the downloaded .mcpb
 ```
 
 On macOS, `shasum -a 256 -c --ignore-missing checksums.txt` is the same check.
+
+A checksum file proves the download matches the file next to it, not who built
+either. Releases from this workflow onward also carry a signed
+[build provenance attestation](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations)
+for the wheel, the sdist and the `.mcpb`, which ties each file's digest to the
+workflow run, commit and tag that produced it:
+
+```bash
+gh attestation verify telegram-ai-cli-mcp-<version>.mcpb --repo stufently/telegram-ai-cli-mcp
+```
+
+Releases up to and including 0.1.1 predate this and have checksums only.
 
 ### Cursor
 
@@ -464,7 +478,7 @@ account itself exactly as before. See
 
 ## MCP tools
 
-The server publishes immediate read/local tools and one typed plan tool per write operation, not a generic `plan_create(operation, params)`, because an untyped `params` doesn't show a model the field schema and it starts inventing argument names. **No tool applies a plan**, and nothing about a plan's state is a tool either: `tg-ai plan list` and `tg-ai plan show <id>` are terminal commands, on the same side of the line as `plan apply`.
+The server publishes immediate read/local tools and, under `profile: plan` only, one typed plan tool per write operation, not a generic `plan_create(operation, params)`, because an untyped `params` doesn't show a model the field schema and it starts inventing argument names. **No tool applies a plan**, and nothing about a plan's state is a tool either: `tg-ai plan list` and `tg-ai plan show <id>` are terminal commands, on the same side of the line as `plan apply`.
 
 ```
 telegram_fleet             telegram_plan_send_message     telegram_plan_join_chat
@@ -495,7 +509,17 @@ telegram_plan_set_chat_about
 telegram_plan_set_chat_photo
 ```
 
-**You can publish fewer of them.** `mcp.tools` (`TGAI_MCP__TOOLS='["telegram_chats","telegram_chat_read"]'`) lists the tools this server is allowed to publish; unset — the default — it publishes all of them, exactly as before. The point is narrow and worth stating plainly: *a prompt injection cannot invoke a tool it never saw in the tool list.* The gate applies to the call path too, since a tool name is a guessable string, and it only ever narrows — the profile, the chat allowlists and the hard denylist all still run underneath, and a name the registry does not publish is a startup error rather than a new tool. See [`docs/configuration.md`](docs/configuration.md#mcp).
+Every tool belongs to exactly one of three classes, and the class decides when it is published:
+
+| Class | Tools | Changes | Published |
+| --- | --- | --- | --- |
+| Read | every tool in the first column except the four below (`readOnlyHint: true`) | nothing | always |
+| Local write | `telegram_media_fetch`, `telegram_media_transcribe`, `telegram_archive_sync`, `telegram_archive_forget` | files in `paths.downloads` / `paths.archive` on this machine, checked against the client's roots; nothing on Telegram | always |
+| Plan | every `telegram_plan_*` | a plan record on this machine; nothing on Telegram until `tg-ai plan apply` | only under `profile: plan` |
+
+A tool that writes to Telegram directly does not exist in any profile. Both lists are pinned by tests (`tests/test_mcp_readonly_default.py`), so a new tool cannot join the default surface by accident.
+
+**You can publish fewer of them.** `mcp.tools` (`TGAI_MCP__TOOLS='["telegram_chats","telegram_chat_read"]'`) lists the tools this server is allowed to publish; unset — the default — it publishes everything the profile allows. Naming a plan tool there under `readonly` refuses to start rather than silently dropping it. The point is narrow and worth stating plainly: *a prompt injection cannot invoke a tool it never saw in the tool list.* The gate applies to the call path too, since a tool name is a guessable string, and it only ever narrows — the profile, the chat allowlists and the hard denylist all still run underneath, and a name the registry does not publish is a startup error rather than a new tool. See [`docs/configuration.md`](docs/configuration.md#mcp).
 
 The four `telegram_archive_*` tools are the way out of paying an RPC for every question. `archive_sync` copies **one named chat** — there is no daemon, no background sweep and no "archive everything" — into a SQLite file on your own disk, resuming from a stored watermark so a second run fetches only what is new. `archive_search` then answers offline, which is what makes **regular expressions** possible at all: Telegram's own search matches text, not patterns. Two properties keep that honest. The read allowlist is re-applied **on the read**, not remembered from the write, so a chat archived yesterday and closed today stops answering and is counted as withheld rather than quietly missing. And every archive answer carries `meta.source: archive` plus the timestamp of the oldest sync it covers — an archive result mistaken for a live one is stale state reported as current. The file is `0600`, gitignored, and **not encrypted**: the `.session` file next to it already grants full live access to the account, so encryption would not raise the bar while it would make offline search impossible. Recognisable secrets are masked *before* they are written, and `archive_forget` erases a chat — including one the policy has since closed, because "you may not read it and you may not delete it" is the worst of both answers. See [`docs/operations.md`](docs/operations.md#the-local-archive).
 
@@ -617,6 +641,8 @@ git push origin v0.1.0
 
 Then review the draft release GitHub created and publish it.
 
+What a release carries for verification: `checksums.txt` (`sha256sum` format, one line for the wheel, the sdist and the `.mcpb`), a Sigstore-signed SLSA build provenance attestation for each of the three made by [`actions/attest`](https://github.com/actions/attest) in the build jobs (`gh attestation verify <file> --repo stufently/telegram-ai-cli-mcp`), and the PEP 740 attestations PyPI's trusted-publishing upload creates on its own. Every pull request rehearses the build and the checksum file in the `release artifacts (dry run + checksums)` CI job — the same commands, then `sha256sum -c` over the result — and `actionlint` checks `release.yml` itself, so a broken release workflow shows up before a tag spends a version number.
+
 What the pipeline checks before it uploads, because a version on PyPI can never be replaced or re-uploaded: the tag matches `pyproject.toml`; the built file names carry that version; **every** `.py` file in `telegram_ai_cli_mcp/` is present and non-empty in both the wheel and the sdist (an unanchored `.gitignore` pattern has shipped an empty package from this repo before); `py.typed` is in the wheel, since `Typing :: Typed` is a lie without it; and `twine check --strict` accepts the metadata PyPI is about to read.
 
 ## FAQ
@@ -659,13 +685,23 @@ Yes. `tg-ai` is a complete CLI on its own, with human-readable output and a `--j
 
 ## Compatibility
 
-| | |
-| --- | --- |
-| Python | 3.12–3.14 (tested in CI on all three) |
-| Telegram protocol | MTProto, via Telethon — not the Bot API |
-| Operating system | POSIX only in v0.1 (session locking uses `fcntl`); Windows is not supported |
-| Accounts | Multiple accounts per install (a "fleet"), each with its own session, proxy and limits |
-| Session import | Fresh login (phone + code, optional 2FA), or import from Telegram Desktop's `tdata`, via `opentele-ng` |
+What is actually exercised, and by what. Anything not marked **tested** is a reasonable expectation, not a claim.
+
+| | Status | Evidence |
+| --- | --- | --- |
+| Python 3.12, 3.13, 3.14 | **tested** | full test suite on every pull request (`test` job, Ubuntu) |
+| Linux (Ubuntu) | **tested** | every CI job runs on GitHub's `ubuntu-latest`; the author runs the CLI daily on Ubuntu 26.04 |
+| Docker image | **tested** | CI builds the runtime image, checks it does not run as root, and runs its entrypoint |
+| macOS | not tested | POSIX, so expected to work; no CI job runs on macOS |
+| Windows | **not supported** | session locking uses `fcntl` |
+| MCP over stdio | **tested** | `smoke` job: launches `tg-ai mcp`, completes the MCP `initialize` handshake and `tools/list` |
+| MCP over Streamable HTTP | **tested** | `tests/test_http_transport.py` (loopback-only bind, bearer token) |
+| Claude Code, Claude Desktop (incl. `.mcpb`), Cursor, Windsurf, Zed, Codex, VS Code | not tested | config blocks in [Add the MCP server](#add-the-mcp-server-to-your-ai-client) follow each client's documented format; no client is driven in CI |
+| Telegram protocol | — | MTProto via Telethon, not the Bot API |
+| Accounts | — | multiple accounts per install (a "fleet"), each with its own session, proxy and limits |
+| Session import | — | fresh login (phone + code, optional 2FA), or import from Telegram Desktop's `tdata`, via `opentele-ng` |
+
+If you run it somewhere marked *not tested*, an issue saying so (works or not) is what moves a row.
 
 ## License
 

@@ -3,7 +3,7 @@
   "name": "telegram-ai-cli-mcp",
   "display_name": "Telegram AI CLI",
   "description": "Read a personal Telegram account and prepare changes for a person to approve.",
-  "long_description": "Reads chats, search, members and devices on a personal Telegram account, and prepares sends, moderation and settings changes as plans. Sign in first with `tg-ai account login` in a terminal; the session is stored under ~/.local/state/telegram-ai-cli-mcp/ and this extension cannot prompt for a login code. The server sends nothing by itself: a person reviews the plan and applies it with `tg-ai plan apply`. Profile is readonly (the default; reads only) or plan (reads, plus preparing plans).",
+  "long_description": "Reads chats, search, members and devices on a personal Telegram account, and prepares sends, moderation and settings changes as plans. Sign in first with `tg-ai account login` in a terminal; the session is stored under ~/.local/state/telegram-ai-cli-mcp/ and this extension cannot prompt for a login code. The server sends nothing by itself: a person reviews the plan and applies it with `tg-ai plan apply`. Profile is readonly (the default; reads only, and no plan tool is published) or plan (reads, plus the plan tools for preparing changes).",
   "author": {
     "name": "stufently"
   },
@@ -37,7 +37,7 @@
     "profile": {
       "type": "string",
       "title": "Profile",
-      "description": "readonly or plan",
+      "description": "readonly (default: read tools only) or plan (also publishes the plan tools)",
       "default": "readonly"
     }
   },

@@ -7,7 +7,30 @@ before that, breaking changes can happen on any `0.x` release.
 
 ## [Unreleased]
 
+### Changed
+
+- **The MCP server is read-only by default.** Under the default `readonly`
+  profile it no longer publishes any `telegram_plan_*` tool: they are absent from
+  `tools/list`, and calling one by name is refused with `FORBIDDEN_BY_PROFILE`
+  before the operation runs. Plan tools are published only under
+  `profile: plan` / `TGAI_PROFILE=plan` — the same opt-in that already decided
+  whether a plan could be created, now also deciding whether the tool exists.
+  Under `readonly` they refused on every call anyway, so no working setup loses
+  anything; a client that relied on seeing them in the list needs
+  `TGAI_PROFILE=plan`. `mcp.tools` naming a plan tool under `readonly` now
+  refuses to start. The CLI is unchanged.
+
 ### Added
+
+- README: the three tool classes (read, local write, plan) and when each is
+  published, pinned by `tests/test_mcp_readonly_default.py`; a compatibility
+  table that separates what CI or the author actually exercises from what is
+  only expected to work.
+- Release: a signed SLSA build provenance attestation (`actions/attest`) for
+  the wheel, the sdist and the `.mcpb`, verifiable with `gh attestation verify`.
+- CI: `release artifacts (dry run + checksums)` builds all three release
+  artifacts and verifies `checksums.txt` with `sha256sum -c` on every pull
+  request; `actionlint` checks the workflow files.
 
 - GitHub Releases include `checksums.txt` in `sha256sum` format, with a SHA256
   for every `.mcpb` bundle as well as the wheel and sdist. The previous

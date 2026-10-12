@@ -18,6 +18,11 @@ an outgoing message and a human decides whether it goes. Do not look for an
 apply tool, do not suggest the operator disable the profile, and do not offer to
 "send it directly" — nothing in this server can.
 
+If no `telegram_plan_*` tool is in your tool list, the server is running the
+default `readonly` profile, which does not publish them. Say so and stop: the
+operator opts in with `TGAI_PROFILE=plan` (or `profile: plan`) and restarts the
+server. Do not retry a plan tool by name — it is refused under `readonly`.
+
 ## What to do instead
 
 1. Read enough to write the right thing (`telegram_chat_read`, `telegram_search`).

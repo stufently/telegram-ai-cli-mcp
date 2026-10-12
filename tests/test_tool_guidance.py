@@ -18,6 +18,17 @@ from telegram_ai_cli_mcp.mcp_server import _with_use_when, build_server
 from telegram_ai_cli_mcp.ops._use_when import USE_WHEN
 from telegram_ai_cli_mcp.opspec import REGISTRY
 
+
+@pytest.fixture(autouse=True)
+def _plan_profile(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Every tool, plan tools included, is only published under `plan`.
+
+    The default `readonly` surface is pinned in test_mcp_tool_gate; here the
+    point is the text and hints of every tool the server can ever publish.
+    """
+    monkeypatch.setenv("TGAI_PROFILE", "plan")
+
+
 READ = (True, False, True, True)
 LOCAL_WRITE = (False, False, False, True)
 PLAN = (False, False, False, True)

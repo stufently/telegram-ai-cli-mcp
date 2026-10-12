@@ -52,7 +52,7 @@ async def call(server: Any, name: str, **arguments: Any) -> dict[str, Any]:
 
 async def test_with_no_gate_configured_every_tool_is_published(tmp_path: Path) -> None:
     """Unset means unchanged. The gate is opt-in, deliberately."""
-    names = await tool_names(build_server(config_path=config(tmp_path)))
+    names = await tool_names(build_server(config_path=config(tmp_path, profile="plan")))
 
     assert sorted(names) == sorted(REGISTRY.mcp_tool_names())
 
@@ -136,7 +136,9 @@ async def test_a_hidden_tool_is_refused_when_it_is_called_by_name(tmp_path: Path
 
 
 async def test_a_hidden_plan_tool_is_refused_too(tmp_path: Path) -> None:
-    server = build_server(config_path=config(tmp_path, mcp={"tools": ["telegram_chats"]}))
+    server = build_server(
+        config_path=config(tmp_path, profile="plan", mcp={"tools": ["telegram_chats"]})
+    )
 
     payload = await call(server, "telegram_plan_send_message", chat="-4242", text="hi")
 
