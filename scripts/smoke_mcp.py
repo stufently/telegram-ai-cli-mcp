@@ -16,6 +16,10 @@ hard failure with a diagnostic message and a non-zero exit code. Do not soften
 this into a pass; a red `smoke` job here is an honest signal that the MCP
 server isn't wired up yet, not a bug in the check.
 
+Usage: `smoke_mcp.py` launches `tg-ai mcp` from PATH; `smoke_mcp.py CMD...`
+launches CMD instead (CI passes `docker run --rm -i IMAGE` to check that the
+image's default command serves MCP over stdio).
+
 Env overrides (seconds): SMOKE_STARTUP_TIMEOUT, SMOKE_REQUEST_TIMEOUT.
 """
 
@@ -103,18 +107,20 @@ async def _read_response(
 
 
 async def main() -> None:
-    binary = shutil.which("tg-ai")
-    if binary is None:
-        _fail(
-            "`tg-ai` is not on PATH. Either the package is not installed in "
-            "this environment, or the `tg-ai` console script does not exist "
-            "yet (telegram_ai_cli_mcp.cli:main)."
-        )
+    command = sys.argv[1:]
+    if not command:
+        binary = shutil.which("tg-ai")
+        if binary is None:
+            _fail(
+                "`tg-ai` is not on PATH. Either the package is not installed in "
+                "this environment, or the `tg-ai` console script does not exist "
+                "yet (telegram_ai_cli_mcp.cli:main)."
+            )
+        command = [binary, "mcp"]
 
     try:
         proc = await asyncio.create_subprocess_exec(
-            binary,
-            "mcp",
+            *command,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -128,7 +134,7 @@ async def main() -> None:
             limit=STDOUT_LIMIT,
         )
     except OSError as exc:
-        _fail(f"could not launch `{binary} mcp`: {exc}")
+        _fail(f"could not launch `{' '.join(command)}`: {exc}")
 
     if proc.stdin is None:
         await _fail_with_stderr(proc, "child process was started without a stdin pipe")

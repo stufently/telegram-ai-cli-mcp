@@ -151,9 +151,19 @@ jobs:
             exit 1
           fi
       - name: Verify the entrypoint actually runs
-        # No --entrypoint override needed: the image's own ENTRYPOINT is
-        # ["tg-ai"] and its default CMD is ["--help"].
-        run: docker run --rm telegram-ai-cli-mcp:ci
+        # The image's ENTRYPOINT is ["tg-ai"], so arguments go straight to it.
+        run: docker run --rm telegram-ai-cli-mcp:ci --help
+      - name: Verify the default command serves MCP over stdio
+        # The default CMD is ["mcp"]: registries such as Glama start the image
+        # with no arguments and introspect it. No account, session or network
+        # is needed to answer initialize and tools/list. Killing the `docker run`
+        # client on a timeout does not stop the container, so it is named and
+        # force-removed on exit.
+        run: |
+          name="tgai-smoke-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          trap 'docker rm -f "$name" >/dev/null 2>&1 || true' EXIT
+          python3 scripts/smoke_mcp.py \
+            docker run --rm -i --network none --name "$name" telegram-ai-cli-mcp:ci
 
   transcribe-container:
     name: optional transcriber (build + contract)
