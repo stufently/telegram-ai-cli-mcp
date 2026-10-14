@@ -7,6 +7,8 @@ before that, breaking changes can happen on any `0.x` release.
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-10-14
+
 ### Changed
 
 - **The Docker image starts the MCP server by default.** Its `CMD` is now
