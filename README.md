@@ -160,7 +160,8 @@ Details of that layout, and what was left behind in the shared site, are in
 
 ```bash
 docker build -t telegram-ai-cli-mcp .
-docker run --rm telegram-ai-cli-mcp tg-ai --version
+docker run --rm telegram-ai-cli-mcp --version   # arguments go to tg-ai
+docker run --rm -i telegram-ai-cli-mcp          # default: tg-ai mcp over stdio
 ```
 
 ## Configure
@@ -699,7 +700,7 @@ What is actually exercised, and by what. Anything not marked **tested** is a rea
 | --- | --- | --- |
 | Python 3.12, 3.13, 3.14 | **tested** | full test suite on every pull request (`test` job, Ubuntu) |
 | Linux (Ubuntu) | **tested** | every CI job runs on GitHub's `ubuntu-latest`; the author runs the CLI daily on Ubuntu 26.04 |
-| Docker image | **tested** | CI builds the runtime image, checks it does not run as root, and runs its entrypoint |
+| Docker image | **tested** | CI builds the runtime image, checks it does not run as root, runs its entrypoint, and runs the MCP smoke test against its default command |
 | macOS | not tested | POSIX, so expected to work; no CI job runs on macOS |
 | Windows | **not supported** | session locking uses `fcntl` |
 | MCP over stdio | **tested** | `smoke` job: launches `tg-ai mcp`, completes the MCP `initialize` handshake and `tools/list` |

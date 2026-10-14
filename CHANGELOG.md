@@ -7,6 +7,16 @@ before that, breaking changes can happen on any `0.x` release.
 
 ## [Unreleased]
 
+### Changed
+
+- **The Docker image starts the MCP server by default.** Its `CMD` is now
+  `["mcp"]` instead of `["--help"]`, so `docker run -i IMAGE` serves MCP over
+  stdio, as registries that start and introspect the image (Glama) expect. No
+  account, session or network is needed to answer `initialize` and
+  `tools/list`. Pass arguments to run any other command:
+  `docker run --rm IMAGE --help`. CI checks the default command with
+  `scripts/smoke_mcp.py`, which now accepts the command to launch.
+
 ## [0.1.2] — 2026-10-12
 
 ### Changed

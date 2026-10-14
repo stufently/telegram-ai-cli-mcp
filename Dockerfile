@@ -82,4 +82,4 @@ WORKDIR /app
 USER tgai
 
 ENTRYPOINT ["tg-ai"]
-CMD ["--help"]
+CMD ["mcp"]
