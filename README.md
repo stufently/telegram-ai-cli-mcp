@@ -347,6 +347,10 @@ Releases up to and including 0.1.1 predate this and have checksums only.
 
 ### Cursor
 
+[![Add telegram MCP server to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=telegram&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyItLWZyb20iLCJ0ZWxlZ3JhbS1haS1jbGktbWNwIiwidGctYWkiLCJtY3AiXSwiZW52Ijp7IlRHQUlfUFJPRklMRSI6InJlYWRvbmx5In19)
+
+The button installs the same `uvx` command with `TGAI_PROFILE=readonly`; sign the account in from a terminal first (see [Install](#install)). Or add the block below by hand.
+
 File: `~/.cursor/mcp.json` (every project) or `.cursor/mcp.json` (this project).
 
 ```json
