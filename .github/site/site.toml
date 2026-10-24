@@ -1,0 +1,58 @@
+# Site config for .github/site/build.py. Everything else comes from README.md.
+name = "telegram-ai-cli-mcp"
+title = "telegram-ai-cli-mcp — Telegram MCP server for AI agents"
+headline = "CLI and MCP server for AI agents on a personal Telegram account"
+description = "Read chats, search messages and resolve usernames over MTProto from Claude Code, Claude Desktop, Codex or Cursor; every write is a plan a person applies."
+lang = "en"
+keywords = ["telegram mcp", "mcp server", "telegram user account", "mtproto", "telethon", "userbot", "claude code", "codex", "cursor", "cli"]
+license = "MIT"
+license_url = "https://opensource.org/license/mit"
+category = "DeveloperApplication"
+os = "Linux, macOS"
+programming_language = "Python"
+eyebrow = "Open source · MIT · Python 3.12+"
+download_url = "https://pypi.org/project/telegram-ai-cli-mcp/"
+same_as = ["https://pypi.org/project/telegram-ai-cli-mcp/"]
+
+landing_sections = ["What it does", "Safety", "Install", "Example prompts"]
+
+pages = [
+  "docs/operations.md",
+  "docs/configuration.md",
+  "docs/threat-model.md",
+  "docs/product-boundaries.md",
+]
+docs_dir = ""
+
+features = [
+  "Task-shaped access to a personal Telegram account over MTProto: read chats, search messages, resolve who a username belongs to, check who is in a group.",
+  "Plan, then apply: anything that changes something on Telegram is saved as a plan, and only tg-ai plan apply carries it out. No MCP tool applies a plan.",
+  "Read-only by default: the readonly profile publishes no telegram_plan_* tools; plan tools appear only under profile: plan.",
+  "Fail-closed allowlists: direct messages, sending, joining and admin actions are closed until chat ids are listed; 777000 and Saved Messages are closed in code.",
+  "Audit log before and after every RPC, rate limits that persist across restarts, and an identical-send ledger.",
+  "One CLI with a --json form and an MCP server over stdio or loopback HTTP with a bearer token; installs with uvx, pipx, uv tool or Docker.",
+]
+
+[[faq]]
+q = "How do I let Claude read my Telegram?"
+a = "Run tg-ai mcp and register it as an MCP server with Claude Code or Claude Desktop. The readonly profile is active by default and groups and channels are readable immediately; direct messages stay closed until you add specific chat ids to safety.read.dms.allow."
+
+[[faq]]
+q = "Is there an MCP server for Telegram user accounts?"
+a = "Yes, this one. It is built on MTProto through Telethon, not the Bot API, so it can read existing chat history, resolve usernames and see who is in a group the way a human member's client can."
+
+[[faq]]
+q = "Can an AI agent send messages on my Telegram account through this?"
+a = "Only after a two-step plan and apply. An MCP client without shell access cannot apply a plan. A client that also has a shell (Claude Code, Codex and similar) can run tg-ai plan apply itself, so for those the safety net is the audit log and rate limits, not a hard gate."
+
+[[faq]]
+q = "Is this a Telegram bot?"
+a = "No. It automates a personal user account over MTProto. A Bot API bot is a different kind of Telegram entity with different limits and different visibility into chat history."
+
+[[faq]]
+q = "Will Telegram ban my account for using this?"
+a = "Telegram can limit or ban any account it judges to be running abusive automation, whatever tool sent the requests. The tool is built around ordinary reading and occasional allowlisted sending; mass joins, high-volume sends and member scraping are not something it tries to make safe."
+
+[[faq]]
+q = "Which Python version do I need?"
+a = "3.12 or newer; 3.12 to 3.14 are tested in CI. Linux is tested, macOS is expected to work but not tested, and Windows is not supported because session locking uses fcntl."
