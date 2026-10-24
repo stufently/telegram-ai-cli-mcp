@@ -270,3 +270,4 @@ private-denylist.txt
 # `git add -A` cannot tell the difference — one reached a commit's index this
 # way, complete with an absolute path from the machine it was written on.
 /tmp/
+_site/
